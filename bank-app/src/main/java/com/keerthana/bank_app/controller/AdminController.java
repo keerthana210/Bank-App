@@ -7,6 +7,7 @@ import com.keerthana.bank_app.service.AdminService;
 import com.keerthana.bank_app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,16 +27,13 @@ public class AdminController {
     }
 
     @PostMapping("/adminLogin")
-    public ResponseStatusException adminLogin(@RequestBody AdminLogin login){
-        System.out.println("32 "+login.getAdminId());
+    public ResponseEntity<String > adminLogin(@RequestBody AdminLogin login){
         if(adminService.adminExistById(login.getAdminId())){
-            System.out.println("33 "+login.getAdminId());
             if(adminService.validateAdminCredentials(login.getAdminId(), login.getAdminPassword())){
-                System.out.println("35 "+login.getAdminId());
-                return new ResponseStatusException(HttpStatus.OK,"Logged In Successfully!");
+                return ResponseEntity.ok("Logged In Successfully!");
             }
         }
-        return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
     }
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
@@ -43,25 +41,25 @@ public class AdminController {
     }
 
     @GetMapping("/getUserByAccNum")
-    public User getUserById(@RequestParam String accNumber){
+    public ResponseEntity<User> getUserById(@RequestParam String accNumber){
         List<User> users = userService.getAllUsers();
         for(User user:users){
             System.out.println(user.getAccNumber()+" "+accNumber);
             if((user.getAccNumber()).equals(accNumber)){
-                return user;
+                return ResponseEntity.ok().body(user);
             }
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
     }
 
     @PostMapping("/NewAdmin")
-    public ResponseStatusException addNewAdmin(@Valid @RequestBody Admin admin, BindingResult result){
+    public ResponseEntity<String> addNewAdmin(@Valid @RequestBody Admin admin, BindingResult result){
 
         if (result.hasErrors()) {
-            return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
         }
         Admin registeredUser = adminService.addAdmin(admin);
-        return new ResponseStatusException(HttpStatus.OK,"Admin Added Successfully!");
+        return ResponseEntity.ok("Admin Added Successfully!");
 
     }
 

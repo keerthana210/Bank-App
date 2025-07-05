@@ -5,6 +5,7 @@ import com.keerthana.bank_app.model.User;
 import com.keerthana.bank_app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,25 +33,25 @@ public class UserController {
 
 
     @PostMapping("/userLogin")
-    public ResponseStatusException userLogin(@RequestBody UserLogin login){
+    public ResponseEntity<String> userLogin(@RequestBody UserLogin login){
         if(userService.userExistById(login.getUserId())){
             if(userService.validateUserCredentials(login.getUserId(), login.getAccPassword())){
-                return new ResponseStatusException(HttpStatus.OK,"Logged In Successfully!");
+                return ResponseEntity.ok("Logged In Successfully!");
             }
         }
-        return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
+        throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
     }
     
     @PostMapping("/userRegistration")
-    public ResponseStatusException registerUser(@Valid @RequestBody User user, BindingResult result) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody User user, BindingResult result) {
         if (userService.existsByAccNumber(user.getAccNumber())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Account number already exists");
         }
         if (result.hasErrors()) {
-            return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
         }
         User registeredUser = userService.saveUser(user);
-        return new ResponseStatusException(HttpStatus.OK,"User Registered Successfully!");
+        return ResponseEntity.ok("User Registered Successfully!");
     }
 
 

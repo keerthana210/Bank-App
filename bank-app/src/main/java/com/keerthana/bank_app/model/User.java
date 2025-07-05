@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 public class User {
 
     @Id
+    @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
@@ -22,6 +23,13 @@ public class User {
     private String accHolderName;
     private String accHolderLocation;
     private String accPassword;
+    private double accBalance;
+
+    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
+    private String contactNumber;
+
+    @Email(message = "Invalid email address")
+    private String emailId;
 
     public double getAccBalance() {
         return accBalance;
@@ -31,13 +39,7 @@ public class User {
         this.accBalance = accBalance;
     }
 
-    private double accBalance;
 
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
-    private String contactNumber;
-
-    @Email(message = "Invalid email address")
-    private String emailId;
 
     public int getUserId() {
         return userId;

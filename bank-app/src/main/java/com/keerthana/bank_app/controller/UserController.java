@@ -1,17 +1,13 @@
 package com.keerthana.bank_app.controller;
 
+import com.keerthana.bank_app.model.UserLogin;
 import com.keerthana.bank_app.model.User;
-import com.keerthana.bank_app.repository.UserRepository;
 import com.keerthana.bank_app.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 /*
 Used to control the activities of User alias Customer
@@ -29,33 +25,32 @@ Used to control the activities of User alias Customer
 @RequestMapping("/user/")
 public class UserController {
 
-    private UserRepository userRepository;
     private UserService userService;
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userRepository=userRepository;
     }
 
-    @RequestMapping("/")
-    public String welcome(){
-        return "Welcome to Bank!";
-    }
 
-    @GetMapping("/userDetail/{userId}/{accPassword}")
-    public User getUserDetails( @PathVariable int userId, @PathVariable String accPassword){
-        List<User> user = userService.getAllUsers();
-        if(userId==1 && accPassword.equals("Keerthi8*"))
-            return userService.getAllUsers().get(userId-1);
-        return null;
+    @PostMapping("/userLogin")
+    public ResponseStatusException userLogin(@RequestBody UserLogin login){
+        if(userService.userExistById(login.getUserId())){
+            if(userService.validateUserCredentials(login.getUserId(), login.getAccPassword())){
+                return new ResponseStatusException(HttpStatus.OK,"Logged In Successfully!");
+            }
+        }
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
     }
     
     @PostMapping("/userRegistration")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getGlobalErrors());
+    public ResponseStatusException registerUser(@Valid @RequestBody User user, BindingResult result) {
+        if (userService.existsByAccNumber(user.getAccNumber())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account number already exists");
         }
-        User registeredUser = userRepository.save(user);
-        return ResponseEntity.ok("User Registered Successfully!");
+        if (result.hasErrors()) {
+            return new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
+        }
+        User registeredUser = userService.saveUser(user);
+        return new ResponseStatusException(HttpStatus.OK,"User Registered Successfully!");
     }
 
 

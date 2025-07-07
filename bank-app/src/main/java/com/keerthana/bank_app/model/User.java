@@ -15,7 +15,7 @@ public class User {
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private Long userId;
 
     @Column(unique = true)
     private String accNumber;
@@ -24,6 +24,16 @@ public class User {
     private String accHolderLocation;
     private String accPassword;
     private double accBalance;
+
+    private String transactionPin;
+
+    public String getTransactionPin() {
+        return transactionPin;
+    }
+
+    public void setTransactionPin(String transactionPin) {
+        this.transactionPin = transactionPin;
+    }
 
     @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
     private String contactNumber;
@@ -41,11 +51,11 @@ public class User {
 
 
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -100,7 +110,7 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String accNumber, String accHolderName, String accHolderLocation, String accPassword, double accBalance, String contactNumber, String emailId) {
+    public User(long userId, String accNumber, String accHolderName, String accHolderLocation, String accPassword, double accBalance, String transactionPin, String contactNumber, String emailId) {
 
         this.userId = userId;
         this.accNumber = accNumber;
@@ -108,6 +118,7 @@ public class User {
         this.accHolderLocation = accHolderLocation;
         this.accPassword = accPassword;
         this.accBalance = accBalance;
+        this.transactionPin = transactionPin;
         this.contactNumber = contactNumber;
         this.emailId = emailId;
     }
@@ -121,6 +132,7 @@ public class User {
                 ", accHolderLocation='" + accHolderLocation + '\'' +
                 ", accPassword='" + accPassword + '\'' +
                 ", accBalance=" + accBalance +
+                ", transactionPin=" + transactionPin +
                 ", contactNumber='" + contactNumber + '\'' +
                 ", emailId='" + emailId + '\'' +
                 '}';

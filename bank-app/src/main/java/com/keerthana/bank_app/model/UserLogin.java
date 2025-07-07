@@ -1,14 +1,14 @@
 package com.keerthana.bank_app.model;
 
 public class UserLogin {
-    private int userId;
+    private long userId;
     private String accPassword;
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

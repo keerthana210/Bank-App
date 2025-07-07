@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,16 +30,21 @@ public class UserService {
         return userRepo.existsByAccNumber(accNumber);
     }
 
-    public boolean userExistById(int userId) {
+    public boolean userExistById(long userId) {
         return userRepo.existsById(userId);
     }
 
-    public User getUserById(int userId){
+    public User getUserById(long userId){
         return userRepo.getReferenceById(userId);
     }
 
-    public boolean validateUserCredentials(int userId, String accPassword) {
+    public boolean validateUserCredentials(long userId, String accPassword) {
         User user = getUserById(userId);
         return user.getAccPassword().equals(accPassword);
     }
+
+    public Optional<User> getUserByAccNumber(String accNumber) {
+        return userRepo.findByAccNumber(accNumber);
+    }
+
 }

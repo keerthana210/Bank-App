@@ -1,14 +1,14 @@
 package com.keerthana.bank_app.model;
 
 public class AdminLogin {
-    private int adminId;
+    private long adminId;
     private String adminPassword;
 
-    public int getAdminId() {
+    public long getAdminId() {
         return adminId;
     }
 
-    public void setId(int adminId) {
+    public void setId(long adminId) {
         this.adminId = adminId;
     }
 

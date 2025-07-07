@@ -25,14 +25,12 @@ Used to control the activities of User alias Customer
 @RestController
 @RequestMapping("/user/")
 public class UserController {
-
     private UserService userService;
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-
-    @PostMapping("/userLogin")
+    @PostMapping("/user-login")
     public ResponseEntity<String> userLogin(@RequestBody UserLogin login){
         if(userService.userExistById(login.getUserId())){
             if(userService.validateUserCredentials(login.getUserId(), login.getAccPassword())){
@@ -42,7 +40,7 @@ public class UserController {
         throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
     }
     
-    @PostMapping("/userRegistration")
+    @PostMapping("/user-registration")
     public ResponseEntity<String> registerUser(@Valid @RequestBody User user, BindingResult result) {
         if (userService.existsByAccNumber(user.getAccNumber())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Account number already exists");
@@ -53,12 +51,6 @@ public class UserController {
         User registeredUser = userService.saveUser(user);
         return ResponseEntity.ok("User Registered Successfully!");
     }
-
-
-
-
-
-
 
 
 

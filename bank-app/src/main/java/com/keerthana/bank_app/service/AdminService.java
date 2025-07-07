@@ -16,15 +16,14 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
-    public Admin getAdminById(int id){
+    public Admin getAdminById(long id){
         return adminRepository.getReferenceById(id);
     }
-    public boolean adminExistById(int id) {
+    public boolean adminExistById(long id) {
         return adminRepository.existsById(id);
     }
 
-    public boolean validateAdminCredentials(int id, String adminPassword) {
-        System.out.println(id);
+    public boolean validateAdminCredentials(long id, String adminPassword) {
         return (getAdminById(id).getAdminPassword()).equals(adminPassword);
     }
 }

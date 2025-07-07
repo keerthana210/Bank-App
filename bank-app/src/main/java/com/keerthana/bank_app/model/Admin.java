@@ -11,7 +11,7 @@ public class Admin {
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int adminId;
+    private long adminId;
 
     private String adminName;
     @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
@@ -21,11 +21,11 @@ public class Admin {
     private String access;
     private String adminPassword;
 
-    public int getAdminId() {
+    public long getAdminId() {
         return adminId;
     }
 
-    public void setAdminId(int adminId) {
+    public void setAdminId(long adminId) {
         this.adminId = adminId;
     }
 
@@ -72,7 +72,7 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(int adminId, String adminName, String contactNumber, String emailId, String access, String adminPassword) {
+    public Admin(long adminId, String adminName, String contactNumber, String emailId, String access, String adminPassword) {
         this.adminId = adminId;
         this.adminName = adminName;
         this.contactNumber = contactNumber;

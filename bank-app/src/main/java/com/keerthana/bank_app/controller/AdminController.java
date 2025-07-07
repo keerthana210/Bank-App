@@ -26,7 +26,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PostMapping("/adminLogin")
+    @PostMapping("/admin-login")
     public ResponseEntity<String > adminLogin(@RequestBody AdminLogin login){
         if(adminService.adminExistById(login.getAdminId())){
             if(adminService.validateAdminCredentials(login.getAdminId(), login.getAdminPassword())){
@@ -35,16 +35,15 @@ public class AdminController {
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid UserId or Password!");
     }
-    @GetMapping("/getAllUsers")
+    @GetMapping("/all-users")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
 
-    @GetMapping("/getUserByAccNum")
-    public ResponseEntity<User> getUserById(@RequestParam String accNumber){
+    @GetMapping("/user-by-accNum")
+    public ResponseEntity<User> getUserByAccNumber(@RequestParam String accNumber){
         List<User> users = userService.getAllUsers();
         for(User user:users){
-            System.out.println(user.getAccNumber()+" "+accNumber);
             if((user.getAccNumber()).equals(accNumber)){
                 return ResponseEntity.ok().body(user);
             }
@@ -54,7 +53,6 @@ public class AdminController {
 
     @PostMapping("/NewAdmin")
     public ResponseEntity<String> addNewAdmin(@Valid @RequestBody Admin admin, BindingResult result){
-
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Inputs!");
         }

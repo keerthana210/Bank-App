@@ -1,14 +1,20 @@
 package com.keerthana.bank_app.model;
 
+import jakarta.validation.constraints.NotNull;
+
 public class AdminLogin {
-    private long adminId;
+
+    @NotNull(message = "Admin ID cannot be empty!")
+    private Long adminId;
+
+    @NotNull(message = "Password cannot be empty!")
     private String adminPassword;
 
-    public long getAdminId() {
+    public Long getAdminId() {
         return adminId;
     }
 
-    public void setId(long adminId) {
+    public void setId(Long adminId) {
         this.adminId = adminId;
     }
 

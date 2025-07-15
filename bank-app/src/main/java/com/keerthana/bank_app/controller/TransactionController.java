@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/transaction/")
+@RequestMapping("/transactions/")
 public class TransactionController {
 
     private UserService userService;
@@ -22,7 +22,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/sendMoney")
+    @PostMapping("/send-money")
     public ResponseEntity<String> sendMoney(@RequestBody SendMoney sendMoney) {
         Transactions transactions = new Transactions();
         transactions.setSenderAccNum(sendMoney.getSenderAccNum());
@@ -37,25 +37,29 @@ public class TransactionController {
         }
         User sender = senderOpt.get();
 
-        if (sender.getAccBalance() < sendMoney.getAmountSent()) {
-            transactions.setStatus("Failed");
-            transactions.setMessage("Insufficient balance");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
-        }
-
         Optional<User> receiverOpt = userService.getUserByAccNumber(sendMoney.getReceiverAccNum());
         if (receiverOpt.isEmpty()) {
             transactions.setStatus("Failed");
             transactions.setMessage("Receiver not found");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver not found");
         }
-        User receiver = receiverOpt.get();
 
         if (!sender.getTransactionPin().equals(sendMoney.getSenderTransactionPin())) {
             transactions.setStatus("Failed");
             transactions.setMessage("Invalid transaction PIN");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid transaction PIN");
         }
+        
+        if (sender.getAccBalance() < sendMoney.getAmountSent()) {
+            transactions.setStatus("Failed");
+            transactions.setMessage("Insufficient balance");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
+        }
+
+
+        User receiver = receiverOpt.get();
+
+
         sender.setAccBalance(sender.getAccBalance() - sendMoney.getAmountSent());
         receiver.setAccBalance(receiver.getAccBalance() + sendMoney.getAmountSent());
         userService.saveUser(sender);
@@ -66,7 +70,7 @@ public class TransactionController {
         return ResponseEntity.ok("Money transferred successfully");
     }
 
-    @PostMapping("/withdrawMoney")
+    @PostMapping("/withdraw-money")
     public ResponseEntity<String> withdrawMoney(@RequestBody WithdrawMoney withdrawMoney){
         Transactions transactions = new Transactions();
         transactions.setReceiverAccNum("Null");
@@ -77,17 +81,19 @@ public class TransactionController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account does not exist!");
         }
         User accHolder = getAccHolder.get();
-        if(accHolder.getAccBalance()<withdrawMoney.getAmount()){
-            transactions.setStatus("Failed");
-            transactions.setMessage("Insufficient balance!");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance!");
-        }
+
         if(!(accHolder.getTransactionPin()).equals(withdrawMoney.getAccTransactionPin())){
             System.out.println(accHolder.getTransactionPin()+" "+withdrawMoney.getAccTransactionPin());
             transactions.setStatus("Failed");
             transactions.setMessage("Incorrect transaction pin!");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect transaction pin!");
         }
+        if(accHolder.getAccBalance()<withdrawMoney.getAmount()){
+            transactions.setStatus("Failed");
+            transactions.setMessage("Insufficient balance!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance!");
+        }
+
         accHolder.setAccBalance(accHolder.getAccBalance()-withdrawMoney.getAmount());
 
         transactions.setSenderAccNum(withdrawMoney.getAccNumber());
@@ -98,7 +104,7 @@ public class TransactionController {
         return ResponseEntity.ok("Money withdrawn successfully!");
     }
 
-    @PostMapping("/depositMoney")
+    @PostMapping("/deposit-money")
     public ResponseEntity<String> depositMoney(@RequestBody DepositMoney depositMoney){
         Transactions transactions = new Transactions();
         transactions.setReceiverAccNum("Null");

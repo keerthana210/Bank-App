@@ -40,7 +40,7 @@
 ---
 
 ## 🗂 Project Structure
-
+```
 bank-app/
 ├── src/
 │   └── main/
@@ -78,7 +78,7 @@ bank-app/
 ├── README.md
 ├── pom.xml                                    # Maven dependencies
 
-
+```
 
 Made with ❤️ by Keerthana 
 Java Backend Developer | Spring Boot Enthusiast

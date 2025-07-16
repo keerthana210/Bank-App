@@ -81,8 +81,9 @@ bank-app/
 ```
 
 Made with ❤️ by Keerthana 
+
 Java Backend Developer | Spring Boot Enthusiast
 
 📧 keerthiviolet2@gmail.com
-🔗 LinkedIn
-🔗 GitHub
+🔗 [LinkedIn](https://www.linkedin.com/in/keerthi-t/)
+🔗 [GitHub](https://github.com/keerthiviolet)

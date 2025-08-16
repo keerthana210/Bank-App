@@ -11,10 +11,12 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private long id;
-
     private String senderAccNum;
     private String receiverAccNum;
     private double amount;
+
+    private double accountBalance;
+
     private LocalDateTime timestamp;
 
     private String status;
@@ -77,14 +79,23 @@ public class Transactions {
         this.status = status;
     }
 
+    public double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
     public Transactions() {
     }
 
-    public Transactions(long id, String senderAccNum, String receiverAccNum, double amount, LocalDateTime timestamp, String status, String message) {
+    public Transactions(long id, String senderAccNum, String receiverAccNum, double amount, double accountBalance, LocalDateTime timestamp, String status, String message) {
         this.id = id;
         this.senderAccNum = senderAccNum;
         this.receiverAccNum = receiverAccNum;
         this.amount = amount;
+        this.accountBalance = accountBalance;
         this.timestamp = timestamp;
         this.status = status;
         this.message = message;

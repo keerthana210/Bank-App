@@ -4,7 +4,6 @@ import com.keerthana.bank_app.enums.AdminAccessLevel;
 import com.keerthana.bank_app.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 
 @Entity

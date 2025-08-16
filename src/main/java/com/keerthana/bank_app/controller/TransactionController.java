@@ -5,17 +5,19 @@ import com.keerthana.bank_app.service.TransactionService;
 import com.keerthana.bank_app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/transactions/")
+@RequestMapping("/user/transactions/")
 public class TransactionController {
 
     private UserService userService;
@@ -44,7 +46,7 @@ public class TransactionController {
         transactions.setReceiverAccNum(sendMoney.getReceiverAccNum());
         transactions.setAmount(sendMoney.getAmountSent());
 
-        Optional<User> senderOpt = userService.getUserByAccNumber(sendMoney.getSenderAccNum());
+        Optional<User> senderOpt = userService.getUserByAccNumber(senderAccNum);
         if (senderOpt.isEmpty()) {
             transactions.setStatus("Failed");
             transactions.setMessage("Sender not Found");
@@ -73,12 +75,11 @@ public class TransactionController {
 
 
         User receiver = receiverOpt.get();
-
-
         sender.setAccBalance(sender.getAccBalance() - sendMoney.getAmountSent());
         receiver.setAccBalance(receiver.getAccBalance() + sendMoney.getAmountSent());
         userService.saveUser(sender);
         userService.saveUser(receiver);
+        transactions.setAccountBalance(sender.getAccBalance());
         transactions.setStatus("Passed");
         transactions.setMessage("Money Transferred successfully");
         transactionService.save(transactions);
@@ -92,7 +93,7 @@ public class TransactionController {
 
         Transactions transactions = new Transactions();
         transactions.setReceiverAccNum("Null");
-        Optional<User> getAccHolder = userService.getUserByAccNumber(withdrawMoney.getAccNumber());
+        Optional<User> getAccHolder = userService.getUserByAccNumber(accNumber);
         if(getAccHolder.isEmpty()){
             transactions.setStatus("Failed");
             transactions.setMessage("Account does not exist!");
@@ -112,8 +113,8 @@ public class TransactionController {
         }
 
         accHolder.setAccBalance(accHolder.getAccBalance()-withdrawMoney.getAmount());
-
-        transactions.setSenderAccNum(withdrawMoney.getAccNumber());
+        transactions.setAccountBalance(accHolder.getAccBalance());
+        transactions.setSenderAccNum(accNumber);
         transactions.setAmount(withdrawMoney.getAmount());
         transactions.setStatus("Passed");
         transactions.setMessage("Money Withdrawn Successfully");
@@ -128,7 +129,7 @@ public class TransactionController {
 
         Transactions transactions = new Transactions();
         transactions.setReceiverAccNum("Null");
-        Optional<User> getAccHolder = userService.getUserByAccNumber(depositMoney.getAccNumber());
+        Optional<User> getAccHolder = userService.getUserByAccNumber(accNumber);
         if(getAccHolder.isEmpty()){
             transactions.setStatus("Failed");
             transactions.setMessage("Account does not exist!");
@@ -136,28 +137,18 @@ public class TransactionController {
         }
         User accHolder = getAccHolder.get();
         if (!passwordEncoder.matches(depositMoney.getAccTransactionPin(), accHolder.getTransactionPin())) {
+            System.out.println("errrrrrrrrrrrrrrrrrrrrr");
             transactions.setStatus("Failed");
             transactions.setMessage("Incorrect transaction pin!");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect transaction pin!");
         }
         accHolder.setAccBalance(accHolder.getAccBalance()+depositMoney.getAmountDeposited());
-
-        transactions.setSenderAccNum(depositMoney.getAccNumber());
+        transactions.setAccountBalance(accHolder.getAccBalance());
+        transactions.setSenderAccNum(accNumber);
         transactions.setAmount(depositMoney.getAmountDeposited());
         transactions.setStatus("Passed");
         transactions.setMessage("Money Deposited Successfully");
         transactionService.save(transactions);
         return ResponseEntity.ok("Money Deposited successfully!");
-    }
-    @GetMapping("/transactions-by-accNum")
-    public ResponseEntity<List<Transactions>> getTransactionsByAccNumber(@RequestParam String accNumber) {
-        List<Transactions> transactions = transactionService
-                .findBySenderAccNumOrReceiverAccNumOrderByIdDesc(accNumber, accNumber);
-
-        if (transactions.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No transactions found for this account.");
-        }
-
-        return ResponseEntity.ok(transactions);
     }
 }

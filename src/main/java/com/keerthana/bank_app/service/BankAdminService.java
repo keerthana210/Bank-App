@@ -2,11 +2,6 @@ package com.keerthana.bank_app.service;
 
 import com.keerthana.bank_app.model.Admin;
 import com.keerthana.bank_app.model.AdminPrinciples;
-import com.keerthana.bank_app.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

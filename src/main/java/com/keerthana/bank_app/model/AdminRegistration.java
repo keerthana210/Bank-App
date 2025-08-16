@@ -1,8 +1,9 @@
 package com.keerthana.bank_app.model;
 
 import com.keerthana.bank_app.enums.AdminAccessLevel;
-import com.keerthana.bank_app.enums.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 

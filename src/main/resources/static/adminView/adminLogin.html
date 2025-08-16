@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login - Hira Bank</title>
+    <link rel="shortcut icon" href="\favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(67, 22, 157);
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .container {
+            padding-top: 50px;
+            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-header img {
+            max-width: 300px;
+            height: auto;
+        }
+        label{
+            padding-left: 10px;
+        }
+        .login-form {
+            background-color: rgb(148, 121, 202);
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-form h2 {
+            text-align: center;
+            color:white;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-group label {
+            width: 40%;
+        }
+
+        .form-group input {
+            width: 58%;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            margin-right: 10px;
+        }
+        .button-wrapper{
+            display: flex;
+            justify-content: center;
+        }
+        .submit-button {
+             background-color: #3f28b1;
+            color: white;
+            border: none;
+            padding: 10px 0;
+            width: 60%;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #2c1e7a;
+        }
+
+        /* Added only for error message */
+        #errorMessage {
+            text-align: center;
+            color: #ff6666;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="login-header">
+        <img src="/bankName.png" alt="Hira Bank">
+    </header>
+    <main>
+        <div class="login-form">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="loginId">Admin Id</label>
+                    <input type="text" id="loginId" name="loginId" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="button-wrapper">
+                    <button type="submit" class="submit-button">Login</button>
+                </div>
+                <p id="errorMessage">Invalid username or password!</p>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const loginId = document.getElementById('loginId').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ loginId, adminPassword: password })
+            });
+
+            if (response.ok) {
+                window.location.href = 'adminDashboard.html';
+            } else if (response.status === 401) {
+                document.getElementById('errorMessage').style.display = 'block';
+            } else {
+                document.getElementById('errorMessage').textContent = 'Something went wrong. Please try again.';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('errorMessage').textContent = 'Unable to connect to the server.';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

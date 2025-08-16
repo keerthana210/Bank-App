@@ -5,8 +5,6 @@ import com.keerthana.bank_app.enums.Role;
 import com.keerthana.bank_app.service.AdminService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component

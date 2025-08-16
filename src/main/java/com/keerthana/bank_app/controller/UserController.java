@@ -2,8 +2,9 @@ package com.keerthana.bank_app.controller;
 
 import com.keerthana.bank_app.model.*;
 import com.keerthana.bank_app.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -34,18 +36,30 @@ public class UserController {
         return userDetails.getUsername();
     }
     @PostMapping("/login")
-    public ResponseEntity<String> userLoginById(@RequestBody UserLogin login){
+    public ResponseEntity<String> userLoginById(@RequestBody UserLogin login, HttpServletRequest request) {
         String loginId = login.getLoginId();
         String loginPassword = login.getAccPassword();
-        if(loginId.isEmpty()||loginPassword.isEmpty()){
+
+        if (loginId.isEmpty() || loginPassword.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login ID or Password cannot be empty");
         }
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(login.getLoginId(),login.getAccPassword()));
-        if(authentication.isAuthenticated()){
+
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginId, loginPassword)
+        );
+
+        if (authentication.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            request.getSession(true)
+                    .setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
             return ResponseEntity.ok("User logged in successfully!");
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Credentials!");
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Credentials!");
     }
+
 
     @PostMapping("/registration")
     public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistration user, BindingResult result) {
@@ -96,6 +110,15 @@ public class UserController {
 
         return ResponseEntity.ok("Profile updated successfully");
     }
-
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // get session if exists
+        if (session != null) {
+            session.invalidate(); // destroy session
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User logged out successfully");
+        return ResponseEntity.ok(response);
+    }
 
 }

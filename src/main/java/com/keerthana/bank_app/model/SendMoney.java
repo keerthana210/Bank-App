@@ -1,14 +1,19 @@
 package com.keerthana.bank_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.PrePersist;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class SendMoney {
     @JsonIgnore
     private String senderAccNum;
+    @NotNull(message = "Receiver account number cannot be empty")
     private String receiverAccNum;
+    @NotNull(message = "Transaction pin cannot be empty")
     private String senderTransactionPin;
+    @NotNull(message = "Amount cannot be empty")
     private double amountSent;
     private LocalDateTime date;
 

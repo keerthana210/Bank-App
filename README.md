@@ -15,16 +15,6 @@
 
 ---
 
-## 📌 Features Coming Soon
-
-- 🔐 JWT-based login and secure authentication
-- 👤 User session-based handling of transactions
-- 📄 Swagger UI for API documentation
-- 🚀 Deployment on Railway or Render
-- 📈 Transaction history & account statements
-
----
-
 ## 🧰 Tech Stack
 
 | Layer | Tech                     |
@@ -57,6 +47,9 @@ bank-app/
 │       │               └── BankAppApplication.java # Main Spring Boot application class
 │       └── resources/
 │           ├── static/                        # Static files (HTML, CSS, JS if any)
+│           │   ├──adminView/
+│           │   ├──userView/
+│           │   └──index.html
 │           ├── templates/                     # Thymeleaf templates (if used)
 │           └── application.properties         # Configuration for DB, port, etc.
 ├── src/

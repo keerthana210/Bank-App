@@ -1,10 +1,10 @@
-# 💳 HiraBank – Spring Boot Banking Application
+# HiraBank – Spring Boot Banking Application
 
 **HiraBank** is a Spring Boot-based banking system that allows admins and users to log in and perform basic banking operations such as deposits, withdrawals, and money transfers. This project is a work-in-progress personal backend portfolio app aimed at demonstrating real-world skills in Java, Spring Boot, and RESTful API design.
 
 ---
 
-## 🚀 Features Implemented (So Far)
+## Features Implemented
 
 - ✅ Admin & User login (with role separation)
 - ✅ Password encryption using BCrypt
@@ -15,7 +15,7 @@
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Layer | Tech                     |
 |-------|--------------------------|
@@ -29,7 +29,7 @@
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 ```
 bank-app/
 ├── src/
@@ -38,20 +38,20 @@ bank-app/
 │       │   └── com/
 │       │       └── keerthana/
 │       │           └── bank_app/
-│       │               ├── configuration/     # Security configuration classes
-│       │               ├── controller/        # REST controllers (AdminController, UserController)
-│       │               ├── enums/             # Enum definitions (Role, AccessLevel, etc.)
-│       │               ├── model/             # Entity classes (User, Admin, etc.)
-│       │               ├── repository/        # JPA repositories  
-│       │               ├── service/           # Service layer for business logic
-│       │               └── BankAppApplication.java # Main Spring Boot application class
+│       │               ├── configuration/     
+│       │               ├── controller/         
+│       │               ├── enums/             
+│       │               ├── model/             
+│       │               ├── repository/         
+│       │               ├── service/           
+│       │               └── BankAppApplication.java 
 │       └── resources/
-│           ├── static/                        # Static files (HTML, CSS, JS if any)
+│           ├── static/                       
 │           │   ├──adminView/
 │           │   ├──userView/
 │           │   └──index.html
-│           ├── templates/                     # Thymeleaf templates (if used)
-│           └── application.properties         # Configuration for DB, port, etc.
+│           ├── templates/                    
+│           └── application.properties         
 ├── src/
 │   └── test/
 │       └── java/
@@ -69,7 +69,7 @@ bank-app/
 │
 ├── .gitignore
 ├── README.md
-├── pom.xml                                    # Maven dependencies
+├── pom.xml                                   
 
 ```
 

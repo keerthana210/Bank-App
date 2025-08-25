@@ -14,9 +14,9 @@ public class User {
     private Long id;
     @Column(unique = true)
     private String userId;
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String accNumber;
-   @Column(nullable = false)
+    @Column(nullable = false)
     private String accHolderName;
     @Column(nullable = false)
     private String accHolderLocation;
@@ -27,17 +27,17 @@ public class User {
     @Column(nullable = false)
     @JsonIgnore
     private String transactionPin;
-   @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String contactNumber;
-   @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String emailId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @PrePersist
-    public void setRole(){
-        this.role=Role.USER;
+    public void setRole() {
+        this.role = Role.USER;
     }
 
     public Long getId() {

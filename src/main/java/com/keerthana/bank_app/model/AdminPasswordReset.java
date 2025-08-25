@@ -7,7 +7,6 @@ public class AdminPasswordReset {
     @NotNull(message = "Id cannot be empty!")
     @JsonIgnore
     private String adminId;
-
     @NotNull(message = "Old password cannot be empty!")
     private String oldAdminPassword;
     @NotNull(message = "New Password cannot be empty!")

@@ -1,170 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>User Login - Hira Bank</title>
-    <link rel="shortcut icon" href="/favicon.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background-color: rgb(67, 22, 157);
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+      body {
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-        .container {
-            padding-top: 50px;
-            padding-bottom: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+      .container {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      .login-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
-        .login-header img {
-            max-width: 300px;
-            height: auto;
-        }
+      .login-header img {
+        max-width: 300px;
+        height: auto;
+      }
 
-        label {
-            padding-left: 10px;
-        }
+      label {
+        padding-left: 10px;
+      }
 
-        .login-form {
-            background-color: rgb(148, 121, 202);
-            padding: 30px;
-            border-radius: 12px;
-            width: 500px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
+      .login-form {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 500px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
 
-        .login-form h2 {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            margin-top: 0;
-        }
+      .login-form h2 {
+        text-align: center;
+        color: rgb(67, 22, 157);
+        margin-bottom: 20px;
+        margin-top: 0;
+      }
 
-        .form-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            color: white;
-            font-weight: 500;
-        }
+      .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        color: black;
+        font-weight: 500;
+      }
 
-        .form-group label {
-            width: 40%;
-        }
+      .form-group label {
+        width: 40%;
+      }
 
-        .form-group input {
-            width: 58%;
-            padding: 8px;
-            border-radius: 6px;
-            border: none;
-            margin-right: 10px;
-        }
+      .form-group input {
+        width: 58%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+      }
 
-        .button-wrapper {
-            display: flex;
-            justify-content: center;
-        }
+      .password-toggle {
+        display: flex;
+        justify-content: center;
+        font-size: 15px;
+        margin-bottom: 15px;
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .submit-button {
-            background-color: #3f28b1;
-            color: white;
-            border: none;
-            padding: 10px 0;
-            width: 60%;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      button {
+        background-color: #3f28b1;
+        color: white;
+        border: none;
+        padding: 10px 0;
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 45%;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-        .submit-button:hover {
-            background-color: #2c1e7a;
-        }
+      button:hover {
+        background-color: #2c1e7a;
+      }
 
-        #loginMessage {
-            text-align: center;
-            color: white;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+      #loginMessage {
+        text-align: center;
+        color: white;
+        margin-top: 15px;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
-<div class="container">
-    <header class="login-header">
-        <img src="/bankName.png" alt="Hira Bank">
-    </header>
-    <main>
+  </head>
+  <body>
+    <div class="container">
+      <header class="login-header">
+        <img src="/bankName.png" alt="Hira Bank" />
+      </header>
+      <main>
         <div class="login-form">
-            <h2>User Login</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginId">User ID / Account Number</label>
-                    <input type="text" id="loginId" name="loginId" required>
-                </div>
+          <h2>User Login</h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginId">User ID / Account No.</label>
+              <input
+                type="text"
+                id="loginId"
+                name="loginId"
+                placeholder="Enter Account Number / User ID"
+                required
+              />
+            </div>
 
-                <div class="form-group">
-                    <label for="accPassword">Password</label>
-                    <input type="password" id="accPassword" name="accPassword" required>
-                </div>
-                <div class="button-wrapper">
-                    <button type="submit" class="submit-button">Login</button>
-                </div>
-            </form>
-            <p id="loginMessage"></p>
+            <div class="form-group">
+              <label for="accPassword">Password</label>
+              <input
+                type="password"
+                id="accPassword"
+                name="accPassword"
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+            <div class="password-toggle">
+              <input type="checkbox" id="togglePassword" /> Show Password
+            </div>
+            <div class="button-wrapper">
+              <button type="submit" class="submit-button">Login</button>
+              <button
+                type="button"
+                id="backButton"
+                class="back-btn"
+                onclick="window.location.href='/index.html'"
+              >
+                Back
+              </button>
+            </div>
+          </form>
+          <p id="loginMessage"></p>
         </div>
-    </main>
-</div>
-<script>
-    document.getElementById('loginForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
+      </main>
+    </div>
+    <script>
+      window.onload = function () {
+        fetch("/user/clear-session", {
+          method: "POST",
+          credentials: "include",
+        });
+      };
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
 
-        const loginId = document.getElementById('loginId').value;
-        const accPassword = document.getElementById('accPassword').value;
-        const loginMessage = document.getElementById('loginMessage');
+          const loginId = document.getElementById("loginId").value.trim();
+          const accPassword = document
+            .getElementById("accPassword")
+            .value.trim();
+          const loginMessage = document.getElementById("loginMessage");
 
-        loginMessage.textContent = "";
+          loginMessage.textContent = "";
 
-        try {
-            const response = await fetch('/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ loginId, accPassword })
+          if (!loginId || !accPassword) {
+            loginMessage.style.color = "#e74c3c";
+            loginMessage.textContent =
+              "Please enter both username and password!";
+            return;
+          }
+
+          try {
+            const response = await fetch("/user/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ loginId, accPassword }),
             });
 
             if (response.ok) {
-                window.location.href = 'userdashboard.html';
+              window.location.href = "userdashboard.html";
             } else if (response.status === 401 || response.status === 400) {
-                loginMessage.style.color = "#e74c3c";
-                loginMessage.textContent = "Invalid username or password!";
+              loginMessage.style.color = "#e74c3c";
+              loginMessage.textContent = "Invalid username or password!";
             } else {
-                loginMessage.style.color = "#e74c3c";
-                loginMessage.textContent = "Something went wrong. Please try again.";
+              loginMessage.style.color = "#e74c3c";
+              loginMessage.textContent =
+                "Something went wrong. Please try again.";
             }
-        } catch (error) {
-            console.error('Error:', error);
+          } catch (error) {
+            console.error("Error:", error);
             loginMessage.style.color = "#e74c3c";
             loginMessage.textContent = "Unable to connect to the server.";
-        }
-    });
-</script>
-
-
-</body>
+          }
+        });
+      document
+        .getElementById("togglePassword")
+        .addEventListener("change", function () {
+          const passwordField = document.getElementById("accPassword");
+          if (this.checked) {
+            passwordField.type = "text";
+          } else {
+            passwordField.type = "password";
+          }
+        });
+    </script>
+  </body>
 </html>

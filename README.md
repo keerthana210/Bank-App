@@ -6,12 +6,12 @@
 
 ## Features Implemented
 
-- ✅ Admin & User login (with role separation)
-- ✅ Password encryption using BCrypt
-- ✅ Deposit, Withdraw, and Send Money functionalities
-- ✅ Database integration using MySQL
-- ✅ Layered architecture (Controller → Service → Repository → Model)
-- ✅ RESTful APIs using Spring Boot
+-  Admin & User login (with role separation)
+-  Password encryption using BCrypt
+-  Deposit, Withdraw, and Send Money functionalities
+-  Database integration using MySQL
+-  Layered architecture (Controller → Service → Repository → Model)
+-  RESTful APIs using Spring Boot
 
 ---
 

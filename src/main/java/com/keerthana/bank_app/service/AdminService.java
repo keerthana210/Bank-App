@@ -53,7 +53,6 @@ public class AdminService {
     }
 
     public boolean validateAdminCredentials(String adminId, String adminPassword) {
-        System.out.println(adminId);
         if(adminExistByAdminId(adminId)){
             Admin admin = getAdminByAdminId(adminId);
             return passwordEncoder.matches(adminPassword,admin.getAdminPassword());

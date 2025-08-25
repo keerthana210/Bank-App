@@ -41,7 +41,6 @@ public class GlobalSecurityExceptionHandler implements AuthenticationEntryPoint,
         errorDetails.put("error", error);
         errorDetails.put("message", message != null ? message : "");
         errorDetails.put("path", path);
-
         response.setContentType("application/json");
         response.setStatus(status);
         response.getWriter().write(objectMapper.writeValueAsString(errorDetails));

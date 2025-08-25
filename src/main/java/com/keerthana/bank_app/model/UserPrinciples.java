@@ -9,9 +9,11 @@ import java.util.Collections;
 
 public class UserPrinciples implements UserDetails {
     private User user;
+
     public UserPrinciples(User user) {
         this.user = user;
     }
+
     public User getUser() {
         return user;
     }

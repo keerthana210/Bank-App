@@ -1,394 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>User Dashboard - Hira Bank</title>
-  <link rel="shortcut icon" href="favicon.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #f4f4f9;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>User Dashboard - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+      }
 
-    header {
-      background-color: #43169d;
-      color: white;
-      padding: 20px 40px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 30px;
+      }
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      height: 100vh;
-    }
+      .header-left {
+        flex: 1;
+      }
 
-    .sidebar {
-      background-color: rgb(148, 121, 202);
-      padding: 20px;
-      color: white;
-    }
+      .header-center {
+        text-align: center;
+        flex: 2;
+      }
 
-    .sidebar h3 {
-      margin-top: 0;
-    }
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+        border-radius: 3%;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 50px;
+      }
 
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
+      .header-center h1 {
+        margin: 5px 0 0 0;
+        font-size: 20px;
+      }
 
-    .sidebar li,
-    .sidebar button {
-      padding: 12px 8px;
-      cursor: pointer;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      background-color: #4d3cc7;
-      border: none;
-      color: white;
-      transition: background 0.3s ease;
-    }
+      .header-center p {
+        margin: 2px 0 0 0;
+        font-size: 16px;
+      }
 
-    .sidebar li:hover,
-    .sidebar button:hover {
-      background-color: #2c1e7a;
-    }
+      .header-right {
+        flex: 1;
+        text-align: right;
+      }
 
-    .content {
-      padding: 30px;
-      overflow-y: auto;
-      justify-content: center;
-      background-color: rgb(225, 217, 237);
-    }
+      .header button {
+        background-color: rgb(255, 255, 255);
+        color: black;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
 
-    .card {
-      background-color: white;
-      padding: 20px 40px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: 20px auto;
-      justify-self: center;
-      width: 100%;
-    }
+      .header button:hover {
+        background-color: #e60000;
+        color: white;
+      }
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 20px;
-      color: #43169d;
-    }
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        padding: 30px;
+        max-width: 1200px;
+        margin: auto;
+        margin-top: 20px;
+      }
 
-    .profile-details p,
-    .detail-row {
-      margin: 6px 0;
-    }
+      .card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
 
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #eee;
-      padding: 6px 0;
-    }
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
 
-    .transaction-buttons {
-      display: flex;
-      gap: 20px;
-    }
+      .card h2 {
+        margin-bottom: 18px;
+        color: black;
+        font-size: 20px;
+      }
 
-    .transaction-buttons button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #43169d;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+      .card button {
+        background-color: rgb(67, 22, 157);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 5px 0;
+      }
 
-    .transaction-buttons button:hover {
-      background-color: #2c1e7a;
-    }
+      .card button:hover {
+        background-color: rgb(113, 58, 223);
+      }
 
-    .statement-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
+      .faq-list {
+        text-align: center;
+        padding: 0 10px;
+      }
 
-    .statement-table th,
-    .statement-table td {
-      padding: 12px 16px;
-      text-align: center;
-      font-size: 14px;
-      border: 1px solid #43169d;
-    }
-
-    .statement-table th {
-      background-color: #43169d;
-      color: white;
-      font-weight: 600;
-    }
-
-    .statement-table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    .statement-table tr:hover {
-      background-color: #f1f4ff;
-      transition: background-color 0.3s ease;
-    }
-
-    #balance.card {
-      padding: 10px 20px;
-      min-height: 60px;
-      text-align: center;
-      margin: 10px auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-      max-width: 400px;
-    }
-
-    .balance-display {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .balance-display .label {
-      font-size: 20px;
-      color: #777;
-    }
-
-    .balance-display .amount {
-      margin-top: 20px;
-      font-size: 40px;
-      font-weight: bold;
-      color: #000000;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      font-weight: 500;
-      margin-bottom: 4px;
-      color: #555;
-    }
-
-    .form-group input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .form-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .form-buttons button {
-      padding: 10px 20px;
-      border: none;
-      font-weight: 500;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    .form-buttons button[type="submit"] {
-      background-color: #43169d;
-      color: white;
-    }
-
-    .form-buttons .cancel {
-      background-color: #eee;
-      color: #333;
-    }
-
-    .form-buttons button[type="submit"]:hover {
-      background-color: #2c1e7a;
-      transform: translateY(-1px);
-    }
-
-    .form-buttons .cancel:hover {
-      background-color: #ddd;
-      transform: translateY(-1px);
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <span>Welcome to Hira Bank - User Dashboard</span>
-    <button onclick="logout()" style="padding: 8px 16px; font-size: 14px; background-color: #ffffff33; border: 1px solid white; color: white; border-radius: 6px; cursor: pointer; transition: background 0.3s ease;">
-      Logout
-    </button>
-  </div>
-</header>
-
-<div class="dashboard">
-  <div class="sidebar">
-    <h3>Menu</h3>
-    <ul>
-      <li onclick="showSection('profile')">Profile</li>
-      <li onclick="showSection('balance')">Account Balance</li>
-      <li onclick="showSection('statement')">Account Statement</li>
-      <li onclick="showSection('withdraw')">Withdraw</li>
-      <li onclick="showSection('deposit')">Deposit</li>
-      <li onclick="showSection('transfer')">Transfer Money</li>
-      <li onclick="showSection('update')">Update Profile</li>
-    </ul>
-  </div>
-
-  <div class="content">
-    <!-- Profile Section -->
-    <div id="profile" class="card">
-      <h2>Your Profile</h2>
-      <div class="profile-details">
-        <div class="detail-row"><span class="label">Account Number</span><span class="value">1234567890</span></div>
-        <div class="detail-row"><span class="label">User ID</span><span class="value">Hira001</span></div>
-        <div class="detail-row"><span class="label">Name</span><span class="value">Keerthana</span></div>
-        <div class="detail-row"><span class="label">Email</span><span class="value">keer@example.com</span></div>
-        <div class="detail-row"><span class="label">Contact Number</span><span class="value">9000567890</span></div>
-        <div class="detail-row"><span class="label">Location</span><span class="value">Chennai</span></div>
+      .faq-list p {
+        margin: 10px 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-left"></div>
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Welcome, <span id="username">User</span>!!!</p>
+      </div>
+      <div class="header-right">
+        <button onclick="logout()">Logout</button>
       </div>
     </div>
 
-    <!-- Balance Section -->
-    <div id="balance" class="card" style="display:none;">
-      <h2>Account Balance</h2>
-      <div class="balance-display">
-        <span class="label">Current Balance:</span>
-        <span class="amount">₹12,350.00</span>
+    <div class="dashboard">
+      <div class="card">
+        <h2>Profile</h2>
+        <button onclick="window.location.href='viewProfile.html'">
+          View Profile
+        </button>
+        <br /><br />
+        <button onclick="window.location.href='updateProfile.html'">
+          Update Profile
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>Transactions</h2>
+        <button onclick="window.location.href='deposit.html'">Deposit</button>
+        <br /><br />
+        <button onclick="window.location.href='withdraw.html'">Withdraw</button>
+        <br /><br />
+        <button onclick="window.location.href='sendMoney.html'">
+          Send Money
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>Account</h2>
+        <button onclick="window.location.href='viewBalance.html'">
+          View Balance
+        </button>
+        <br /><br />
+        <button onclick="window.location.href='accountStatement.html'">
+          View Statement
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>Support - FAQs</h2>
+        <div class="faq-list">
+          <p>
+            <strong>Q:</strong> How to update my profile?<br /><strong
+              >A:</strong
+            >
+            Go to "Profile" click on "Update profile"
+          </p>
+          <p>
+            <strong>Q:</strong> Where can I see my transactions?<br /><strong
+              >A:</strong
+            >
+            Go to "Account Statement" click on "View Statement".
+          </p>
+        </div>
       </div>
     </div>
+    <script>
+      async function checkSession() {
+        try {
+          const response = await fetch("/user/current", { method: "GET" });
+          if (!response.ok) {
+            window.location.href = "/index.html?session=expired";
+            return null;
+          }
+          const username = await response.text();
+          const usernameElement = document.getElementById("username");
+          if (usernameElement) usernameElement.textContent = username;
+          return username;
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+          return null;
+        }
+      }
 
-    <!-- Statement Section -->
-    <div id="statement" class="card" style="display:none;">
-      <h2>Account Statement</h2>
-      <table class="statement-table">
-        <tr>
-          <th>ID</th>
-          <th>Time</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Type</th>
-          <th>Amount</th>
-          <th>Status</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>18/07/2025 12:00pm</td>
-          <td>250250</td>
-          <td>630256</td>
-          <td>Transfer</td>
-          <td>5000.00</td>
-          <td>Success</td>
-        </tr>
-      </table>
-    </div>
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
 
-    <!-- Withdraw Section -->
-    <div id="withdraw" class="card" style="display:none;">
-      <h2>Withdraw</h2>
-      <form>
-        <div class="form-group">
-          <label for="withdraw-amount">Amount:</label>
-          <input type="number" id="withdraw-amount" placeholder="Enter amount" required>
-        </div>
-        <div class="form-group">
-          <label>From Account:</label>
-          <input type="text" value="1234567890" readonly>
-        </div>
-        <div class="form-buttons">
-          <button type="submit">Send</button>
-          <button type="reset" class="cancel">Cancel</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Deposit Section -->
-    <div id="deposit" class="card" style="display:none;">
-      <h2>Deposit</h2>
-      <form>
-        <div class="form-group">
-          <label for="deposit-amount">Amount:</label>
-          <input type="number" id="deposit-amount" placeholder="Enter amount" required>
-        </div>
-        <div class="form-group">
-          <label>To Account:</label>
-          <input type="text" value="1234567890" readonly>
-        </div>
-        <div class="form-buttons">
-          <button type="submit">Send</button>
-          <button type="reset" class="cancel">Cancel</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Transfer Section -->
-    <div id="transfer" class="card" style="display:none;">
-      <h2>Transfer Money</h2>
-      <form>
-        <div class="form-group">
-          <label for="transfer-amount">Amount:</label>
-          <input type="number" id="transfer-amount" placeholder="Enter amount" required>
-        </div>
-        <div class="form-group">
-          <label for="receiver-account">Receiver Account:</label>
-          <input type="text" id="receiver-account" placeholder="Enter receiver account number" required>
-        </div>
-        <div class="form-group">
-          <label>Sender Account:</label>
-          <input type="text" value="1234567890" readonly>
-        </div>
-        <div class="form-buttons">
-          <button type="submit">Send</button>
-          <button type="reset" class="cancel">Cancel</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Update Profile Section -->
-    <div id="update" class="card" style="display:none;">
-      <h2>Update Profile</h2>
-      <p>Edit contact details, email, or location...</p>
-    </div>
-  </div>
-</div>
-
-<script>
-  function showSection(id) {
-    document.querySelectorAll(".card").forEach(card => {
-      card.style.display = "none";
-    });
-    document.getElementById(id).style.display = "block";
-  }
-
-  function logout() {
-    alert("You have been logged out!");
-    window.location.href = "login.html";
-  }
-</script>
-
-</body>
+      window.onload = async () => {
+        await checkSession();
+      };
+    </script>
+  </body>
 </html>

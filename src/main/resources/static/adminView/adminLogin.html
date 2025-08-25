@@ -1,161 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Admin Login - Hira Bank</title>
-    <link rel="shortcut icon" href="\favicon.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="\favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background-color: rgb(67, 22, 157);
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+      body {
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-        .container {
-            padding-top: 50px;
-            padding-bottom: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+      .container {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      .login-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
-        .login-header img {
-            max-width: 300px;
-            height: auto;
-        }
-        label{
-            padding-left: 10px;
-        }
-        .login-form {
-            background-color: rgb(148, 121, 202);
-            padding: 30px;
-            border-radius: 12px;
-            width: 500px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
+      .login-header img {
+        max-width: 300px;
+        height: auto;
+      }
+      label {
+        padding-left: 10px;
+      }
+      .login-form {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 500px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
 
-        .login-form h2 {
-            text-align: center;
-            color:white;
-            margin-bottom: 20px;
-            margin-top: 0;
-        }
+      .login-form h2 {
+        text-align: center;
+        color: rgb(67, 22, 157);
+        margin-bottom: 20px;
+        margin-top: 0;
+      }
 
-        .form-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            color: white;
-            font-weight: 500;
-        }
+      .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        color: black;
+        font-weight: 500;
+      }
 
-        .form-group label {
-            width: 40%;
-        }
+      .form-group label {
+        width: 40%;
+      }
 
-        .form-group input {
-            width: 58%;
-            padding: 8px;
-            border-radius: 6px;
-            border: none;
-            margin-right: 10px;
-        }
-        .button-wrapper{
-            display: flex;
-            justify-content: center;
-        }
-        .submit-button {
-             background-color: #3f28b1;
-            color: white;
-            border: none;
-            padding: 10px 0;
-            width: 60%;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      .form-group input {
+        width: 58%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+      }
+      .password-toggle {
+        display: flex;
+        justify-content: center;
+        font-size: 15px;
+        margin-bottom: 15px;
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      button {
+        background-color: #3f28b1;
+        color: white;
+        border: none;
+        padding: 10px 0;
+        width: 45%;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-        .submit-button:hover {
-            background-color: #2c1e7a;
-        }
+      button:hover {
+        background-color: #2c1e7a;
+      }
 
-        /* Added only for error message */
-        #errorMessage {
-            text-align: center;
-            color: #ff6666;
-            font-weight: bold;
-            margin-top: 15px;
-            display: none;
-        }
+      #message {
+        text-align: center;
+        color: #ff6666;
+        font-weight: bold;
+        margin-top: 15px;
+        display: none;
+      }
     </style>
-</head>
-<body>
-<div class="container">
-    <header class="login-header">
-        <img src="/bankName.png" alt="Hira Bank">
-    </header>
-    <main>
+  </head>
+  <body>
+    <div class="container">
+      <header class="login-header">
+        <img src="/bankName.png" alt="Hira Bank" />
+      </header>
+      <main>
+        <!--Login-->
         <div class="login-form">
-            <h2>Admin Login</h2>
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label for="loginId">Admin Id</label>
-                    <input type="text" id="loginId" name="loginId" required>
-                </div>
+          <h2>Admin Login</h2>
+          <form id="adminLoginForm">
+            <div class="form-group">
+              <label for="loginId">Admin Id</label>
+              <input
+                type="text"
+                id="loginId"
+                name="loginId"
+                placeholder="Enter Admin ID"
+                required
+              />
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="button-wrapper">
-                    <button type="submit" class="submit-button">Login</button>
-                </div>
-                <p id="errorMessage">Invalid username or password!</p>
-            </form>
+            <div class="form-group">
+              <label for="adminPassword">Password</label>
+              <input
+                type="password"
+                id="adminPassword"
+                name="adminPassword"
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+            <div class="password-toggle">
+              <input type="checkbox" id="togglePassword" /> Show Password
+            </div>
+            <div class="button-wrapper">
+              <button type="submit" class="submit-button">Login</button>
+              <button
+                type="button"
+                id="backButton"
+                class="back-btn"
+                onclick="window.location.href='/index.html'"
+              >
+                Back
+              </button>
+            </div>
+            <p id="message">Invalid username or password!</p>
+          </form>
         </div>
-    </main>
-</div>
+      </main>
+    </div>
 
-<script>
-    document.getElementById('adminLoginForm').addEventListener('submit', async function (event) {
-        event.preventDefault();
+    <script>
+         window.onload = function () {
+        fetch("/admin/clear-session", {
+          method: "POST",
+          credentials: "include",
+        });
+      };
+      document
+        .getElementById("adminLoginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-        const loginId = document.getElementById('loginId').value;
-        const password = document.getElementById('password').value;
+          const data = {
+            loginId: document.getElementById("loginId").value,
+            adminPassword: document.getElementById("adminPassword").value,
+          };
 
-        try {
-            const response = await fetch('/admin/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ loginId, adminPassword: password })
+          const message = document.getElementById("message");
+
+          try {
+            const response = await fetch("/admin/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
             });
 
             if (response.ok) {
-                window.location.href = 'adminDashboard.html';
-            } else if (response.status === 401) {
-                document.getElementById('errorMessage').style.display = 'block';
+              window.location.href = "adminDashboard.html";
             } else {
-                document.getElementById('errorMessage').textContent = 'Something went wrong. Please try again.';
-                document.getElementById('errorMessage').style.display = 'block';
+              message.style.display = "block";
+              message.style.color = "red";
+              message.textContent = "Invalid username or password!";
             }
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('errorMessage').textContent = 'Unable to connect to the server.';
-            document.getElementById('errorMessage').style.display = 'block';
-        }
-    });
-</script>
-</body>
+          } catch (err) {
+            message.style.display = "block";
+            message.style.color = "red";
+            message.textContent = "Something went wrong. Please try again.";
+          }
+        });
+     document
+        .getElementById("togglePassword")
+        .addEventListener("change", function () {
+          const passwordField = document.getElementById("adminPassword");
+          if (this.checked) {
+            passwordField.type = "text";
+          } else {
+            passwordField.type = "password";
+          }
+        });
+    </script>
+  </body>
 </html>

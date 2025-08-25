@@ -10,16 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminInitializer {
     private AdminService adminService;
+
     @Autowired
     public AdminInitializer(AdminService adminService) {
         this.adminService = adminService;
     }
 
-
     @PostConstruct
     public void initDefaultAdmin() {
         String defaultEmail = "admin@hirabank.com";
-
         if (!adminService.existsByEmailId(defaultEmail)) {
             Admin admin = new Admin();
             admin.setAdminName("Root");
@@ -29,10 +28,8 @@ public class AdminInitializer {
             admin.setAdminPassword("Admin@123");
             admin.setRole(Role.ADMIN);
             Admin savedAdmin = adminService.saveAdmin(admin);
-
             String customId = "HIRA_AD" + String.format("%03d", savedAdmin.getId());
             savedAdmin.setAdminId(customId);
-
             adminService.saveAdmin(savedAdmin);
         }
     }

@@ -4,11 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 
 public class AdminLogin {
-
     @NotNull(message = "Enter Admin Id or Admin Email Id")
     @Column(nullable = false)
     private String loginId;
-
     @NotNull(message = "Password cannot be empty!")
     @Column(nullable = false)
     private String adminPassword;

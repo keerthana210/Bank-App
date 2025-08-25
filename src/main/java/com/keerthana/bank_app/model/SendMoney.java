@@ -28,7 +28,6 @@ public class SendMoney {
         this.date = date;
     }
 
-
     public String getSenderAccNum() {
         return senderAccNum;
     }

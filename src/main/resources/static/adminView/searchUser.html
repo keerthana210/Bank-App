@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Search User - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+      }
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+      .container {
+        width: 600px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+      .heading {
+        text-align: center;
+        margin-bottom: 20px;
+        color: black;
+      }
+      .field {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .field label {
+        flex: 0 0 180px; 
+        font-weight: bold;
+        color: #444;
+        padding-right: 10px;
+      }
+      .field input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: #f9f9f9;
+        font-size: 14px;
+      }
+      .back-btn {
+        margin-top: 20px;
+        width: 60%;
+        padding: 10px;
+        border: none;
+        background-color: rgb(67, 22, 157);
+        color: white;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .back-btn:hover {
+        background-color: #895aca;
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+      .error {
+        color: red;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <h2 id="heading">User Search By Account Number</h2>
+        <p>Hey, <span id="adminName">Admin</span>!</p>
+      </div>
+    </div>
+    <!--Search User-->
+    <div class="container">
+      <h2>User Details</h2>
+
+      <div id="errorMsg" class="error"></div>
+
+      <div class="field">
+        <label>Account Holder Name</label>
+        <input type="text" id="accHolderName" readonly />
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="accHolderLocation" readonly />
+      </div>
+
+      <div class="field">
+        <label>User ID</label>
+        <input type="text" id="userId" readonly />
+      </div>
+
+      <div class="field">
+        <label>Contact Number</label>
+        <input type="text" id="contactNumber" readonly />
+      </div>
+
+      <div class="field">
+        <label>Email ID</label>
+        <input type="email" id="emailId" readonly />
+      </div>
+
+      <div class="field">
+        <label>Account Number</label>
+        <input type="text" id="accNumber" readonly />
+      </div>
+
+      <div class="field">
+        <label>Account Balance</label>
+        <input type="text" id="accBalance" readonly />
+      </div>
+
+      <div class="field">
+        <label>Role</label>
+        <input type="text" id="role" readonly />
+      </div>
+
+      <div class="button-wrapper">
+        <button
+          class="back-btn"
+          onclick="window.location.href='adminDashboard.html'"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+
+<script>
+  async function checkAdminSession() {
+    try {
+      const res = await fetch("/admin/current", { method: "GET", cache: "no-store" });
+      if (!res.ok) {
+        window.location.href = "/index.html?session=expired";
+        return null;
+      }
+      const admin = await res.json();
+      
+      // ✅ update <span id="adminName">
+      const adminNameEl = document.getElementById("adminName");
+      if (adminNameEl) {
+        adminNameEl.textContent = admin.adminName || "Admin";
+      }
+      
+      return admin;
+    } catch (err) {
+      console.error("Session check failed:", err);
+      window.location.href = "/index.html?session=expired";
+      return null;
+    }
+  }
+
+  async function fetchUserDetails(accNumber) {
+    const errorMsg = document.getElementById("errorMsg");
+    try {
+      const response = await fetch(`/admin/user-by-accNum?accNumber=${encodeURIComponent(accNumber)}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          errorMsg.textContent = "User not found!";
+        } else {
+          errorMsg.textContent = "Failed to fetch user details.";
+        }
+        return;
+      }
+
+      const user = await response.json();
+      document.getElementById("accHolderName").value = user.accHolderName ?? "";
+      document.getElementById("accHolderLocation").value = user.accHolderLocation ?? "";
+      document.getElementById("userId").value = user.userId ?? "";
+      document.getElementById("contactNumber").value = user.contactNumber ?? "";
+      document.getElementById("emailId").value = user.emailId ?? "";
+      document.getElementById("accNumber").value = user.accNumber ?? "";
+      document.getElementById("accBalance").value = user.accBalance ?? "";
+      document.getElementById("role").value = user.role ?? "";
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      errorMsg.textContent = "Error connecting to server.";
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    const admin = await checkAdminSession();
+    if (!admin) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const accNumber = urlParams.get("accNumber");
+
+    if (accNumber) {
+      fetchUserDetails(accNumber);
+    } else {
+      document.getElementById("errorMsg").textContent = "No account number provided!";
+    }
+  });
+</script>
+
+
+  </body>
+</html>

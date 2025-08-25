@@ -10,19 +10,20 @@ import java.util.List;
 
 public class AdminPrinciples implements UserDetails {
     private Admin admin;
-    public AdminPrinciples(Admin admin){
-        this.admin=admin;
+
+    public AdminPrinciples(Admin admin) {
+        this.admin = admin;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
-        if (admin.isFullAccess()) { // boolean field in Admin entity
+        if (admin.isFullAccess()) {
             authorities.add(new SimpleGrantedAuthority("FULL_ACCESS"));
         }
-
-        return authorities;  }
+        return authorities;
+    }
 
     @Override
     public String getPassword() {
@@ -53,6 +54,7 @@ public class AdminPrinciples implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     public Admin getAdmin() {
         return admin;
     }

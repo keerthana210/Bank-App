@@ -1,198 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>User Registration - Hira Bank</title>
-    <link rel="shortcut icon" href="\favicon.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="\favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background-color: rgb(67, 22, 157);
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .container {
-            padding-top: 50px;
-            padding-bottom: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .registration-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .registration-header img {
-            max-width: 300px;
-            height: auto;
-        }
-        .registration-form {
-            background-color: rgb(148, 121, 202);
-            padding: 30px;
-            border-radius: 12px;
-            width: 500px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        .registration-form h2 {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            margin-top: 0;
-        }
-        label {
-            padding-left: 10px;
-        }
-        .form-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            color: white;
-            font-weight: 500;
-        }
-        .form-group label {
-            width: 40%;
-        }
-        .form-group input {
-            width: 58%;
-            padding: 8px;
-            border-radius: 6px;
-            border: none;
-            margin-right: 10px
-        }
-        .button-wrapper {
-            display: flex;
-            justify-content: center;
-        }
-        .submit-button {
-            background-color: #3f28b1;
-            color: white;
-            border: none;
-            padding: 10px 0;
-            width: 60%;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .submit-button:hover {
-            background-color: #1a8229;
-        }
-        .message {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #4CAF50;
-        }
-        .back-button {
-            display: block;
-            margin: 20px auto 0;
-            background-color: #555;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .back-button:hover {
-            background-color: #333;
-        }
+      body {
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .container {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .registration-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .registration-header img {
+        max-width: 300px;
+        height: auto;
+      }
+      .registration-form {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 500px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+      .registration-form h2 {
+        text-align: center;
+        color: rgb(67, 22, 157);
+        margin-bottom: 20px;
+        margin-top: 0;
+      }
+      label {
+        padding-left: 10px;
+      }
+      .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        color: black;
+        font-weight: 500;
+      }
+      .form-group label {
+        width: 40%;
+      }
+      .form-group input {
+        width: 58%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      button {
+        background-color: #3f28b1;
+        color: white;
+        border: none;
+        padding: 10px 0;
+        width: 45%;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #6d59d3;
+      }
+
+      .message {
+        text-align: center;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #4caf50;
+      }
     </style>
-</head>
-<body>
-<div class="container">
-    <header class="registration-header">
-        <img src="/bankName.png" alt="Hira Bank">
-    </header>
-    <main>
+  </head>
+  <body>
+    <div class="container">
+      <header class="registration-header">
+        <img src="/bankName.png" alt="Hira Bank" />
+      </header>
+      <main>
         <div class="registration-form">
-            <h2>Customer Registration</h2>
-            <form id="registrationForm">
-                <div class="form-group">
-                    <label for="accNumber">Account Number</label>
-                    <input type="text" id="accNumber" name="accNumber" required>
-                </div>
-                <div class="form-group">
-                    <label for="accHolderName">User Name</label>
-                    <input type="text" id="accHolderName" name="accHolderName" required>
-                </div>
-                <div class="form-group">
-                    <label for="accHolderLocation">Location</label>
-                    <input type="text" id="accHolderLocation" name="accHolderLocation" required>
-                </div>
-                <div class="form-group">
-                    <label for="accPassword">Login Password</label>
-                    <input type="password" id="accPassword" name="accPassword" required>
-                </div>
-                <div class="form-group">
-                    <label for="transactionPin">Transaction Pin</label>
-                    <input type="password" id="transactionPin" name="transactionPin" required>
-                </div>
-                <div class="form-group">
-                    <label for="contactNumber">Contact Number</label>
-                    <input type="text" id="contactNumber" name="contactNumber" required>
-                </div>
-                <div class="form-group">
-                    <label for="emailId">Email Id</label>
-                    <input type="email" id="emailId" name="emailId" required>
-                </div>
-                <div class="button-wrapper">
-                    <button type="submit" class="submit-button">Register</button>
-                </div>
-            </form>
-            <p class="message" id="message"></p>
-            <button class="back-button" id="backButton" style="display:none;">Back</button>
+          <h2>User Registration</h2>
+          <form id="registrationForm">
+            <div class="form-group">
+              <label for="accNumber">Account Number</label>
+              <input
+                type="text"
+                id="accNumber"
+                name="accNumber"
+                placeholder="Enter Account Number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="accHolderName">User Name</label>
+              <input
+                type="text"
+                id="accHolderName"
+                name="accHolderName"
+                placeholder="Enter User Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="accHolderLocation">Location</label>
+              <input
+                type="text"
+                id="accHolderLocation"
+                name="accHolderLocation"
+                placeholder="Enter Location"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="accPassword">Login Password</label>
+              <input
+                type="password"
+                id="accPassword"
+                name="accPassword"
+                placeholder="Enter Account Password"
+                minlength="8"
+                maxlength="24"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"
+                title="Password must be 8-24 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="transactionPin">Transaction Pin</label>
+              <input
+                type="password"
+                id="transactionPin"
+                name="transactionPin"
+                placeholder="Enter 4-digit Transaction Pin"
+                pattern="^[0-9]{4}$"
+                title="Transaction Pin must be exactly 4 digits"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="contactNumber">Contact Number</label>
+              <input
+                type="text"
+                id="contactNumber"
+                name="contactNumber"
+                placeholder="Contact Number"
+                pattern="^[6-9][0-9]{9}$"
+                title="Contact number must be 10 digits and start with 6, 7, 8, or 9"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="emailId">Email Id</label>
+              <input
+                type="email"
+                id="emailId"
+                name="emailId"
+                placeholder="Enter Email Id"
+                required
+              />
+            </div>
+            <div class="button-wrapper">
+              <button type="submit" class="submit-button">Register</button>
+              <button
+                type="button"
+                id="backButton"
+                class="back-btn"
+                onclick="window.location.href='/index.html'"
+              >
+                Back
+              </button>
+            </div>
+          </form>
+          <p class="message" id="message"></p>
         </div>
-    </main>
-</div>
+      </main>
+    </div>
 
-<script>
-    document.getElementById("registrationForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
+    <script>
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
 
-        const userData = {
+          const userData = {
             accNumber: document.getElementById("accNumber").value,
             accHolderName: document.getElementById("accHolderName").value,
-            accHolderLocation: document.getElementById("accHolderLocation").value,
+            accHolderLocation:
+              document.getElementById("accHolderLocation").value,
             accPassword: document.getElementById("accPassword").value,
             transactionPin: document.getElementById("transactionPin").value,
             contactNumber: document.getElementById("contactNumber").value,
-            emailId: document.getElementById("emailId").value
-        };
+            emailId: document.getElementById("emailId").value,
+          };
 
-        try {
+          try {
             const response = await fetch("/user/registration", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData)
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(userData),
             });
 
             const messageElement = document.getElementById("message");
             const backButton = document.getElementById("backButton");
 
             if (response.ok) {
-                messageElement.style.color = "#138925";
-                messageElement.textContent = "User Registered Successfully!";
-                backButton.style.display = "block";
-                document.getElementById("registrationForm").reset();
+              messageElement.style.color = "#138925";
+              messageElement.textContent = "User Registered Successfully!";
+              backButton.style.display = "block";
+              document.getElementById("registrationForm").reset();
             } else {
-                const errorData = await response.json();
-                messageElement.style.color = "#ff4d4d";
-                messageElement.textContent = errorData.message || "Registration failed!";
+              const errorData = await response.json();
+              messageElement.style.color = "#ff4d4d";
+              messageElement.textContent =
+                errorData.message || "Registration failed!";
             }
-        } catch (error) {
+          } catch (error) {
             document.getElementById("message").style.color = "#ff4d4d";
-            document.getElementById("message").textContent = "An error occurred!";
-        }
-    });
+            document.getElementById("message").textContent =
+              "An error occurred!";
+          }
+        });
 
-    document.getElementById("backButton").addEventListener("click", function() {
-        window.history.back();
-    });
-</script>
-</body>
+      document
+        .getElementById("backButton")
+        .addEventListener("click", function () {
+          window.history.back();
+        });
+    </script>
+  </body>
 </html>

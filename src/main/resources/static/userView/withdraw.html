@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Withdraw Money - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+
+      .container {
+        width: 400px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        font-weight: bold;
+        color: #444;
+        padding-left: 2px;
+      }
+
+      input {
+        width: 94%;
+        padding: 10px;
+        margin-bottom: 18px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      button {
+        width: 45%;
+        background: rgb(67, 22, 157);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background: #7d19c4;
+      }
+
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .message-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Hey, <span id="username">User</span>!!!</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>Withdraw Money</h2>
+      <form id="withdrawForm">
+        <label for="amount">Amount</label>
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          placeholder="Enter amount"
+          required
+        />
+
+        <label for="accTransactionPin">Transaction PIN</label>
+        <input
+          type="password"
+          id="accTransactionPin"
+          name="accTransactionPin"
+          placeholder="Enter PIN"
+          required
+        />
+        <div class="button-wrapper">
+          <button type="submit">Withdraw</button>
+          <button
+            type="button"
+            class="back-btn"
+            id="backButton"
+            onclick="window.location.href='userDashboard.html'"
+          >
+            Back
+          </button>
+        </div>
+        <div class="message-wrapper">
+          <p class="message" id="message"></p>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      async function checkSession() {
+        try {
+          const response = await fetch("/user/current", { method: "GET" });
+          if (!response.ok) {
+            window.location.href = "/index.html?session=expired";
+            return false;
+          }
+          const username = await response.text();
+          document.getElementById("username").textContent = username;
+          return true;
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+          return false;
+        }
+      }
+
+      window.onload = checkSession;
+
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
+
+      document
+        .getElementById("withdrawForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          if (!(await checkSession())) return;
+
+          const data = {
+            amount: parseFloat(document.getElementById("amount").value),
+            accTransactionPin:
+              document.getElementById("accTransactionPin").value,
+          };
+
+          const messageElement = document.getElementById("message");
+          const backButton = document.getElementById("backButton");
+
+          try {
+            const response = await fetch("/user/transactions/withdraw-money", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+              messageElement.style.color = "#138925";
+              messageElement.textContent = "Money Withdrawn Successfully!";
+              backButton.style.display = "block";
+              document.getElementById("withdrawForm").reset();
+            } else {
+              const errorData = await response.json();
+              messageElement.style.color = "#ff4d4d";
+              messageElement.textContent =
+                errorData.message ||
+                "Withdrawal failed, check the Transaction Pin!";
+            }
+          } catch (error) {
+            messageElement.style.color = "#ff4d4d";
+            messageElement.textContent = "An error occurred!";
+          }
+        });
+    </script>
+  </body>
+</html>

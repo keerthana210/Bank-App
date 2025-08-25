@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 
 public class UserLogin {
-
     @NotNull(message = "Enter UserId or Account Number!")
     @Column(nullable = false)
     private String loginId;

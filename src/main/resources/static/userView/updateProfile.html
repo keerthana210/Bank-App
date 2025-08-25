@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Update Profile - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+      }
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+      .container {
+        width: 400px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+      .field {
+        margin-bottom: 15px;
+      }
+      .field label {
+        display: block;
+        font-weight: bold;
+        color: #444;
+        padding-left: 2px;
+        margin-bottom: 5px;
+      }
+      .field input {
+        width: 94%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .btn {
+        margin-top: 20px;
+        width: 45%;
+        padding: 10px;
+        border: none;
+        background-color: rgb(67, 22, 157);
+        color: white;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background-color: rgb(120, 80, 202);
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 10px;
+        margin-left: 10px;
+        align-items: center;
+      }
+      .message {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Hey, <span id="username">User</span>!!!</p>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Update Profile</h2>
+      <form id="updateProfileForm">
+        <div class="field">
+          <label>Account Holder Name</label>
+          <input
+            type="text"
+            id="accHolderName"
+            name="accHolderName"
+            placeholder="Enter Account Holder Name"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Location</label>
+          <input
+            type="text"
+            id="accHolderLocation"
+            name="accHolderLocation"
+            placeholder="Enter Location"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Contact Number</label>
+          <input
+            type="text"
+            id="contactNumber"
+            name="contactNumber"
+            placeholder="Enter Contact Number"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Email ID</label>
+          <input
+            type="email"
+            id="emailId"
+            name="emailId"
+            placeholder="Enter Email Id"
+            required
+          />
+        </div>
+        <div class="button-wrapper">
+          <button type="submit" class="btn">Update</button>
+          <button
+            class="btn"
+            onclick="window.location.href='userDashboard.html'"
+          >
+            Back
+          </button>
+        </div>
+      </form>
+      <p class="message" id="message"></p>
+    </div>
+
+    <script>
+      async function checkSession() {
+        try {
+          const response = await fetch("/user/current", { method: "GET" });
+          if (!response.ok) {
+            window.location.href = "/index.html?session=expired";
+            return null;
+          }
+          const username = await response.text();
+          const usernameElement = document.getElementById("username");
+          if (usernameElement) usernameElement.textContent = username;
+          return username;
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+          return null;
+        }
+      }
+
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
+
+      async function loadProfile() {
+        const username = await checkSession();
+        if (!username) return;
+
+        try {
+          const response = await fetch("/user/view-profile", { method: "GET" });
+          if (response.ok) {
+            const user = await response.json();
+            document.getElementById("accHolderName").value =
+              user.accHolderName || "";
+            document.getElementById("accHolderLocation").value =
+              user.accHolderLocation || "";
+            document.getElementById("contactNumber").value =
+              user.contactNumber || "";
+            document.getElementById("emailId").value = user.emailId || "";
+          } else {
+            const messageElement = document.getElementById("message");
+            messageElement.innerText = "Failed to load profile.";
+            messageElement.style.color = "red";
+          }
+        } catch (error) {
+          const messageElement = document.getElementById("message");
+          messageElement.innerText = "Error loading profile.";
+          messageElement.style.color = "red";
+        }
+      }
+
+      async function handleProfileUpdate(e) {
+        e.preventDefault();
+        const username = await checkSession();
+        if (!username) return;
+
+        const accHolderName = document
+          .getElementById("accHolderName")
+          .value.trim();
+        const accHolderLocation = document
+          .getElementById("accHolderLocation")
+          .value.trim();
+        const contactNumber = document
+          .getElementById("contactNumber")
+          .value.trim();
+        const emailId = document.getElementById("emailId").value.trim();
+
+        if (
+          !accHolderName ||
+          !accHolderLocation ||
+          !contactNumber ||
+          !emailId
+        ) {
+          const messageElement = document.getElementById("message");
+          messageElement.innerText = "All fields are required!";
+          messageElement.style.color = "red";
+          return;
+        }
+
+        const profileData = {
+          accHolderName,
+          accHolderLocation,
+          contactNumber,
+          emailId,
+        };
+
+        try {
+          const response = await fetch("/user/update-profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(profileData),
+          });
+
+          const messageElement = document.getElementById("message");
+          if (response.ok) {
+            messageElement.innerText = "Profile updated successfully!";
+            messageElement.style.color = "green";
+          } else {
+            const errorData = await response.json();
+            messageElement.innerText =
+              errorData.message || "Failed to update profile.";
+            messageElement.style.color = "red";
+          }
+        } catch (error) {
+          const messageElement = document.getElementById("message");
+          messageElement.innerText = "Error updating profile.";
+          messageElement.style.color = "red";
+        }
+      }
+
+      window.onload = async () => {
+        await loadProfile();
+        document
+          .getElementById("updateProfileForm")
+          .addEventListener("submit", handleProfileUpdate);
+      };
+    </script>
+  </body>
+</html>

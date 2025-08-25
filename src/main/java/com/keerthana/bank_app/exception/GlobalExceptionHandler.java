@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BankAppException.class)
@@ -30,15 +29,16 @@ public class GlobalExceptionHandler {
         response.put("errors", errors);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> handleResponseStatusException(
             ResponseStatusException ex, HttpServletRequest request) {
-
         Map<String, Object> body = baseError((HttpStatus) ex.getStatusCode());
         body.put("message", ex.getReason() != null ? ex.getReason() : "");
         body.put("path", request.getRequestURI());
         return new ResponseEntity<>(body, ex.getStatusCode());
     }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");

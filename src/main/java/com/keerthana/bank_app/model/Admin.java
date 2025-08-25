@@ -17,10 +17,8 @@ public class Admin {
     private String adminId;
     @NotNull(message = "Name cannot be empty!")
     private String adminName;
-
     @Column(unique = true)
     private String contactNumber;
-
     @Column(unique = true)
     private String emailId;
     @Enumerated(EnumType.STRING)
@@ -31,8 +29,8 @@ public class Admin {
     private String adminPassword;
 
     @PrePersist
-    public void setRole(){
-        this.role=Role.ADMIN;
+    public void setRole() {
+        this.role = Role.ADMIN;
     }
 
     public Admin() {
@@ -109,7 +107,7 @@ public class Admin {
         return adminPassword;
     }
 
-    public void setAdminPassword(String adminPassword){
+    public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword;
     }
 
@@ -125,7 +123,6 @@ public class Admin {
                 ", adminPassword='" + adminPassword + '\'' +
                 '}';
     }
-
 
     public boolean isFullAccess() {
         return getAccess().equals(AdminAccessLevel.FULL_ACCESS);

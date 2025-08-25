@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
 @Order(1)
@@ -20,10 +22,12 @@ public class UserSecurityConfig {
 
     private BankUserService bankUserService;
     private PasswordEncoder passwordEncoder;
-    public UserSecurityConfig(BankUserService bankUserService,PasswordEncoder passwordEncoder) {
+
+    public UserSecurityConfig(BankUserService bankUserService, PasswordEncoder passwordEncoder) {
         this.bankUserService = bankUserService;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Bean(name = "userAuthenticationProvider")
     public DaoAuthenticationProvider userAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -33,13 +37,18 @@ public class UserSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,@Qualifier("userAuthenticationManager") AuthenticationManager authManager, GlobalSecurityExceptionHandler exceptionHandler) throws Exception {
-        //AuthenticationManager authManager = new ProviderManager(userAuthProvider());
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
+    @Bean
+    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http, @Qualifier("userAuthenticationManager") AuthenticationManager authManager, GlobalSecurityExceptionHandler exceptionHandler) throws Exception {
         http
-                .securityMatcher("/user/**","/user/transactions/**")
+                .securityMatcher("/user/**", "/user/transactions/**")
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/login", "/user/registration").permitAll()
+                        .requestMatchers("/user/current").authenticated()
                         .anyRequest().hasRole("USER"))
                 .authenticationManager(authManager)
                 .logout(logout -> logout
@@ -52,7 +61,13 @@ public class UserSecurityConfig {
                             response.setContentType("application/json");
                             response.getWriter().write("{\"message\":\"User logged out successfully\"}");
                         }))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        .and()
+                        .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+                )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(exceptionHandler)
                         .accessDeniedHandler(exceptionHandler)

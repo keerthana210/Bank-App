@@ -14,12 +14,10 @@ public class Transactions {
     private String senderAccNum;
     private String receiverAccNum;
     private double amount;
-
     private double accountBalance;
-
     private LocalDateTime timestamp;
-
     private String status;
+    private String message;
 
     public String getMessage() {
         return message;
@@ -28,8 +26,6 @@ public class Transactions {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    private String message;
 
     public long getId() {
         return id;

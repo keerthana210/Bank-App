@@ -1,10 +1,8 @@
 package com.keerthana.bank_app.controller;
 
 
-import com.keerthana.bank_app.model.AdminLogin;
-import com.keerthana.bank_app.model.AdminPasswordReset;
-import com.keerthana.bank_app.model.AdminRegistration;
-import com.keerthana.bank_app.model.User;
+import com.keerthana.bank_app.enums.AdminAccessLevel;
+import com.keerthana.bank_app.model.*;
 import com.keerthana.bank_app.service.AdminService;
 import com.keerthana.bank_app.service.TransactionService;
 import com.keerthana.bank_app.service.UserService;
@@ -32,18 +30,26 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/")
 public class AdminController {
-
-
     private AuthenticationManager authManager;
     private UserService userService;
     private AdminService adminService;
     private TransactionService transactionService;
 
-    public AdminController(UserService userService, AdminService adminService, @Qualifier("adminAuthenticationManager") AuthenticationManager authManager, TransactionService transactionService) {
+    public AdminController(UserService userService, AdminService adminService,
+                           @Qualifier("adminAuthenticationManager") AuthenticationManager authManager,
+                           TransactionService transactionService) {
         this.userService = userService;
         this.adminService = adminService;
         this.authManager = authManager;
         this.transactionService = transactionService;
+    }
+
+    @GetMapping("/access-level")
+    public ResponseEntity<AdminAccessLevel> getAdminAccess() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String adminId = authentication.getName();
+        Admin admin = adminService.getAdminByAdminId(adminId);
+        return ResponseEntity.ok(admin.getAccess());
     }
 
     @PostMapping("/login")
@@ -52,27 +58,42 @@ public class AdminController {
                                              HttpServletResponse response) {
         String loginId = login.getLoginId();
         String loginPassword = login.getAdminPassword();
-
         if (loginId.isEmpty() || loginPassword.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login ID or Password cannot be empty");
         }
-
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginId, loginPassword)
         );
-
         if (authentication.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            request.getSession(true);
+            HttpSession newSession = request.getSession(true);
+            Admin admin = adminService.getAdminByAdminId(loginId);
+            newSession.setAttribute("loggedAdmin", admin);
             new HttpSessionSecurityContextRepository()
                     .saveContext(SecurityContextHolder.getContext(), request, response);
-
             return ResponseEntity.ok("Admin logged in successfully!");
         }
-
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Credentials!");
     }
-
+    @PostMapping("/clear-session")
+    public ResponseEntity<String> clearSession(HttpServletRequest request) {
+        if (request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+        }
+        return ResponseEntity.ok("Session cleared");
+    }
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrentAdmin(HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("loggedAdmin");
+        if (admin == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
+        }
+        return ResponseEntity.ok(admin);
+    }
 
     @GetMapping("/list-users")
     public List<User> getAllUsers() {
@@ -89,13 +110,13 @@ public class AdminController {
     @GetMapping("/transactions-by-accNum")
     public ResponseEntity<List> getTransactionsByAccNumber(@RequestParam String accNumber) {
         if (userService.existsByAccNumber(accNumber)) {
-            return ResponseEntity.ok(transactionService.findBySenderAccNumOrReceiverAccNumOrderByIdDesc(accNumber, null));
+            return ResponseEntity.ok(transactionService
+                    .findBySenderAccNumOrReceiverAccNumOrderByIdDesc(accNumber, null));
         } else if (!userService.existsByAccNumber(accNumber)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account number not found");
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transaction for Account number is empty!");
     }
-
 
     @PostMapping("/password-reset")
     public ResponseEntity<String> defaultPasswordReset(@Valid @RequestBody AdminPasswordReset adminPasswordReset) {
@@ -109,6 +130,7 @@ public class AdminController {
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Id or Password!");
     }
+
     @PostMapping("/new-admin-creation")
     public ResponseEntity<String> addNewAdmin(@Valid @RequestBody AdminRegistration admin, BindingResult result) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -131,9 +153,9 @@ public class AdminController {
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // get session if exists
+        HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); // destroy session
+            session.invalidate();
         }
         Map<String, String> response = new HashMap<>();
         response.put("message", "Admin logged out successfully");

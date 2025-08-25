@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transactions,Long> {
         List<Transactions> findBySenderAccNumOrReceiverAccNumOrderByIdDesc(String senderAcc, String receiverAcc);
-
 }

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>View Profile - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+      }
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+      .container {
+        width: 400px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+      .field {
+        margin-bottom: 15px;
+      }
+      .field label {
+        display: block;
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 5px;
+        padding-left: 2px;
+      }
+      .field input {
+        width: 94%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: #f9f9f9;
+        font-size: 14px;
+      }
+      .back-btn {
+        margin-top: 20px;
+        width: 60%;
+        padding: 10px;
+        border: none;
+        background-color: rgb(67, 22, 157);
+        color: white;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .back-btn:hover {
+        background-color: #895aca;
+      }
+      .button-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Hey, <span id="username">User</span>!!!</p>
+      </div>
+    </div>
+    <div class="container">
+      <h2>User Profile</h2>
+
+      <div class="field">
+        <label>Account Holder Name</label>
+        <input type="text" id="accHolderName" readonly />
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="accHolderLocation" readonly />
+      </div>
+
+      <div class="field">
+        <label>User ID</label>
+        <input type="text" id="userId" readonly />
+      </div>
+
+      <div class="field">
+        <label>Contact Number</label>
+        <input type="text" id="contactNumber" readonly />
+      </div>
+
+      <div class="field">
+        <label>Email ID</label>
+        <input type="email" id="emailId" readonly />
+      </div>
+
+      <div class="field">
+        <label>Account Number</label>
+        <input type="text" id="accNumber" readonly />
+      </div>
+      <div class="button-wrapper">
+        <button
+          class="back-btn"
+          onclick="window.location.href='userDashboard.html'"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+
+    <script>
+      async function checkSessionAndLoadProfile() {
+        try {
+          const sessionResponse = await fetch("/user/current", {
+            method: "GET",
+          });
+          if (!sessionResponse.ok) {
+            window.location.href = "/index.html?session=expired";
+            return;
+          }
+
+          const username = await sessionResponse.text();
+          document.getElementById("username").textContent = username;
+
+          const profileResponse = await fetch("/user/view-profile", {
+            method: "GET",
+          });
+          if (profileResponse.ok) {
+            const user = await profileResponse.json();
+            document.getElementById("accHolderName").value =
+              user.accHolderName || "";
+            document.getElementById("accHolderLocation").value =
+              user.accHolderLocation || "";
+            document.getElementById("userId").value = user.userId || "";
+            document.getElementById("contactNumber").value =
+              user.contactNumber || "";
+            document.getElementById("emailId").value = user.emailId || "";
+            document.getElementById("accNumber").value = user.accNumber || "";
+          } else {
+            console.error("Failed to load profile.");
+          }
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+        }
+      }
+
+      window.onload = checkSessionAndLoadProfile;
+
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
+    </script>
+  </body>
+</html>

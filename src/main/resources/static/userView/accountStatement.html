@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transaction History - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table th,
+      table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+      }
+
+      table th {
+        background: rgb(148, 121, 202);
+        color: white;
+      }
+
+      table tr:nth-child(even) {
+        background: #e6ddf7;
+      }
+
+      .back-btn {
+        width: 40%;
+        background: rgb(67, 22, 157);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .back-btn:hover {
+        background: #545b62;
+      }
+
+      .button-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+
+      .message {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Hey, <span id="username">User</span>!!!</p>
+      </div>
+    </div>
+    <!--Transactions-->
+    <div class="container">
+      <h2>Transaction History</h2>
+      <p class="message" id="message"></p>
+      <table id="transactionTable">
+        <thead>
+          <tr>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>Amount</th>
+            <th>Balance</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="button-wrapper">
+        <button
+          type="button"
+          class="back-btn"
+          onclick="window.location.href='userDashboard.html'"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+
+    <script>
+      async function checkSession() {
+        try {
+          const response = await fetch("/user/current", { method: "GET" });
+          if (!response.ok) {
+            window.location.href = "/index.html?session=expired";
+            return null;
+          }
+
+          const username = await response.text();
+          const usernameElement = document.getElementById("username");
+          if (usernameElement) usernameElement.textContent = username;
+
+          return username;
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+          return null;
+        }
+      }
+
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
+
+      async function loadTransactions() {
+        const username = await checkSession();
+        if (!username) return;
+        const messageElement = document.getElementById("message");
+        const tbody = document.querySelector("#transactionTable tbody");
+        tbody.innerHTML = "";
+
+        try {
+          const response = await fetch("/user/transactions/transaction-list");
+          if (response.ok) {
+            const transactions = await response.json();
+
+            if (!transactions || transactions.length === 0) {
+              messageElement.style.color = "#ff4d4d";
+              messageElement.textContent = "No transactions found!";
+              return;
+            }
+
+            transactions.forEach((tx) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+              <td>${tx.senderAccNum || "-"}</td>
+              <td>${tx.receiverAccNum || "-"}</td>
+              <td>${tx.amount.toFixed(2)}</td>
+              <td>${tx.accountBalance.toFixed(2)}</td>
+              <td>${tx.status}</td>
+              <td>${tx.message}</td>
+              <td>${new Date(tx.timestamp).toLocaleString()}</td>
+            `;
+              tbody.appendChild(row);
+            });
+          } else {
+            const errorText = await response.text();
+            messageElement.style.color = "#ff4d4d";
+            messageElement.textContent =
+              errorText || "Failed to load transactions!";
+          }
+        } catch (error) {
+          messageElement.style.color = "#ff4d4d";
+          messageElement.textContent = "Error loading transactions!";
+        }
+      }
+
+      window.onload = async () => {
+        await checkSession();
+        loadTransactions();
+      };
+    </script>
+  </body>
+</html>

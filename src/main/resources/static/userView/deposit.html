@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Deposit Money - Hira Bank</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: rgb(67, 22, 157);
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background: rgb(148, 121, 202);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .header-center img {
+        max-width: 300px;
+        height: auto;
+      }
+
+      .container {
+        width: 400px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e2ca5;
+      }
+
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        font-weight: bold;
+        color: #444;
+        padding-left: 2px;
+      }
+
+      input {
+        width: 94%;
+        padding: 10px;
+        margin-bottom: 18px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      button {
+        width: 45%;
+        background: rgb(67, 22, 157);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      button:hover {
+        background: #7d19c4;
+      }
+      .message-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-center">
+        <img src="/bankName.png" alt="Bank Logo" />
+        <p>Hey, <span id="username">User</span>!!!</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>Deposit Money</h2>
+      <form id="depositForm">
+        <label for="amountDeposited">Amount</label>
+        <input
+          type="number"
+          id="amountDeposited"
+          name="amountDeposited"
+          placeholder="Enter amount"
+          required
+        />
+
+        <label for="accTransactionPin">Transaction PIN</label>
+        <input
+          type="password"
+          id="accTransactionPin"
+          name="accTransactionPin"
+          placeholder="Enter PIN"
+          required
+        />
+        <div class="button-wrapper">
+          <button type="submit">Deposit</button>
+          <button
+            type="button"
+            id="backButton"
+            class="back-btn"
+            onclick="window.location.href='userDashboard.html'"
+          >
+            Back
+          </button>
+        </div>
+        <div class="message-wrapper">
+          <p class="message" id="message"></p>
+        </div>
+      </form>
+    </div>
+
+    <script>
+
+      async function checkSession() {
+        try {
+          const response = await fetch("/user/current", { method: "GET" });
+          if (!response.ok) {
+            window.location.href = "/index.html?session=expired";
+            return null;
+          }
+
+          const username = await response.text();
+          const usernameElement = document.getElementById("username");
+          if (usernameElement) usernameElement.textContent = username;
+
+          return username;
+        } catch (error) {
+          window.location.href = "/index.html?session=expired";
+          return null;
+        }
+      }
+
+      function logout() {
+        fetch("/user/logout", { method: "POST" }).finally(() => {
+          window.location.href = "/index.html?logout=success";
+        });
+      }
+
+      async function handleDeposit(e) {
+        e.preventDefault();
+        const username = await checkSession();
+        if (!username) return;
+
+        const data = {
+          amountDeposited: parseFloat(
+            document.getElementById("amountDeposited").value
+          ),
+          accTransactionPin: document.getElementById("accTransactionPin").value,
+        };
+
+        const messageElement = document.getElementById("message");
+        const backButton = document.getElementById("backButton");
+
+        try {
+          const response = await fetch("/user/transactions/deposit-money", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            messageElement.style.color = "#138925";
+            messageElement.textContent = "Money Deposited Successfully!";
+            backButton.style.display = "block";
+            document.getElementById("depositForm").reset();
+          } else {
+            const errorData = await response.json();
+            messageElement.style.color = "#ff4d4d";
+            messageElement.textContent =
+              errorData.message ||
+              "Deposit failed, kindly check the Transaction Pin!";
+          }
+        } catch (error) {
+          messageElement.style.color = "#ff4d4d";
+          messageElement.textContent = "An error occurred!";
+        }
+      }
+
+      window.onload = async () => {
+        await checkSession(); 
+        document
+          .getElementById("depositForm")
+          .addEventListener("submit", handleDeposit);
+      };
+    </script>
+  </body>
+</html>

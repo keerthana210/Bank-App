@@ -92,4 +92,7 @@ public class UserService{
     }
 
 
+    public String getAccHolderNameByAccNumber(String name) {
+        return userRepo.findUserByAccNumber(name).getAccHolderName();
+    }
 }

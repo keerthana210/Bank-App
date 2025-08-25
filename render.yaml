@@ -2,7 +2,7 @@ services:
   - type: web
     name: hira-bank
     env: java
-    buildCommand: ./mvnw clean package -DskipTests
+    buildCommand: mvn clean package -DskipTests
     startCommand: java -jar target/*.jar
     envVars:
       - key: JAVA_VERSION

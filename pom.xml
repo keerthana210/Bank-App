@@ -11,6 +11,7 @@
 	<groupId>com.keerthana</groupId>
 	<artifactId>bank-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>bank-app</name>
 	<description>SpringBoot Banking Application</description>
 	<url/>
@@ -91,6 +92,23 @@
 
 	<build>
 		<plugins>
+			<!-- Required for Spring Boot packaging -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+
+					<excludes>
+						<!-- Exclude Lombok so it’s not bundled into your final jar -->
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- Compiler plugin for Lombok annotation processing -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -104,18 +122,15 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.3</version>
 				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>

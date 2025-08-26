@@ -2,12 +2,7 @@ services:
   - type: web
     name: bank-app
     env: java
+    plan: free
     buildCommand: "./mvnw clean package -DskipTests"
     startCommand: "java -jar target/bank-app-0.0.1-SNAPSHOT.jar"
-    envVars:
-      - key: DATABASE_URL
-        value: your_postgres_connection_url
-      - key: DATABASE_USERNAME
-        value: your_username
-      - key: DATABASE_PASSWORD
-        value: your_password
+

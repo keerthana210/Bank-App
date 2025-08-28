@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Validated
+@Table(name = "users")
 public class User {
     @Id
     @Column(unique = true)

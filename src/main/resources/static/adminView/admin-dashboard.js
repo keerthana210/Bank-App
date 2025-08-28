@@ -164,7 +164,7 @@
     event.preventDefault();
     const accNumber = document.getElementById("accNumber").value.trim();
     if (accNumber) {
-      window.location.href = `searchUser.html?accNumber=${encodeURIComponent(accNumber)}`;
+      window.location.href = `searchuser.html?accNumber=${encodeURIComponent(accNumber)}`;
     }
   }
 

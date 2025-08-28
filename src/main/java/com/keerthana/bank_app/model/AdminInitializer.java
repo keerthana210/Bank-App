@@ -4,13 +4,14 @@ import com.keerthana.bank_app.enums.AdminAccessLevel;
 import com.keerthana.bank_app.enums.Role;
 import com.keerthana.bank_app.service.AdminService;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AdminInitializer {
     private AdminService adminService;
-
     @Autowired
     public AdminInitializer(AdminService adminService) {
         this.adminService = adminService;

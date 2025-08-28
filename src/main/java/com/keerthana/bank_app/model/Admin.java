@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Validated
+@Table(name = "admins")
 public class Admin {
     @Id
     @Column(unique = true)

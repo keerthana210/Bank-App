@@ -304,18 +304,19 @@
         <!-- Search User -->
         <div id="searchUser" class="card" style="display: none">
           <h2>Search User by Account Number</h2>
-          <form onsubmit="redirectToSearchUser(event)" class="admin-form">
+          <form id="searchUserForm" class="admin-form">
             <div class="form-group">
               <label for="accNumber">Account Number</label>
               <input
-                type="text"
-                id="accNumber"
-                name="accNumber"
-                placeholder="Enter Account Number"
-                required
+                      type="text"
+                      id="accNumber"
+                      name="accNumber"
+                      placeholder="Enter Account Number"
+                      required
               />
             </div>
             <button type="submit" class="submit-btn">Search</button>
+            <p id="searchUserMessage" style="color:red; margin-top:10px;"></p>
           </form>
         </div>
 
@@ -343,12 +344,12 @@
         <!-- Add Admin -->
         <div id="addAdmin" class="card" style="display: none">
           <h2>Add New Admin</h2>
-          <form id="adminForm" method="POST" class="admin-form" novalidate>
+          <form id="adminForm" method="POST"  class="admin-form">
             <div class="form-group">
-              <label for="adminName">Name</label>
+              <label for="adminNameInput">Name</label>
               <input
                 type="text"
-                id="adminName"
+                id="adminNameInput"
                 name="adminName"
                 placeholder="Name"
                 required
@@ -366,7 +367,7 @@
                 id="emailId"
                 name="emailId"
                 placeholder="Email ID"
-                pattern="^[a-zA-Z0-9._%+-]+@hirabank\.com$"
+                pattern="^[a-zA-Z0-9._%+\-]+@hirabank\.com$"
                 title="Email must end with @hirabank.com"
                 required
               />

@@ -26,36 +26,81 @@
     }
   }
 
-  async function checkAdminAccess() {
-    try {
-      const res = await fetch("/admin/access-level");
-      if (!res.ok) return;
+ async function checkAdminAccess() {
+   try {
+     const res = await fetch("/admin/access-level");
+     if (!res.ok) return;
 
-      const access = await res.text();
-      const menuList = document.getElementById("menuList");
-      const addAdminCard = document.getElementById("addAdmin");
+     const access = await res.text();
+     const menuList = document.getElementById("menuList");
+     const addAdminCard = document.getElementById("addAdmin");
 
-      if (access.includes("FULL_ACCESS")) {
-        if (![...menuList.children].some((li) => li.textContent.includes("Add Admin"))) {
-          const li = document.createElement("li");
-          li.textContent = "Add Admin";
-          li.onclick = () => showSection("addAdmin");
-          const searchTxLi = [...menuList.children].find((li) =>
-            li.textContent.includes("Search Transactions")
-          );
-          menuList.insertBefore(li, searchTxLi);
-        }
-      } else {
-        const addAdminLi = [...menuList.children].find((li) =>
-          li.textContent.includes("Add Admin")
-        );
-        if (addAdminLi) addAdminLi.remove();
-        if (addAdminCard) addAdminCard.style.display = "none";
-      }
-    } catch (err) {
-      console.error("Access check failed:", err);
-    }
-  }
+     if (access.includes("FULL_ACCESS")) {
+       if (![...menuList.children].some((li) => li.textContent.includes("Add Admin"))) {
+         const li = document.createElement("li");
+         li.textContent = "Add Admin";
+         li.onclick = () => showSection("addAdmin");
+         const searchTxLi = [...menuList.children].find((li) =>
+           li.textContent.includes("Search Transactions")
+         );
+         menuList.insertBefore(li, searchTxLi);
+       }
+
+       if (addAdminCard) {
+         addAdminCard.style.display = "block";
+
+         const adminForm = document.getElementById("adminForm");
+         if (adminForm && !adminForm.hasAttribute("data-listener-attached")) {
+           adminForm.setAttribute("data-listener-attached", "true");
+           adminForm.addEventListener("submit", async (e) => {
+             e.preventDefault();
+             const msgBox = document.getElementById("adminMessage");
+             msgBox.textContent = "";
+console.log("adminName:", document.getElementById("adminNameInput"));
+console.log("emailId:", document.getElementById("emailId"));
+console.log("contactNumber:", document.getElementById("contactNumber"));
+console.log("access:", document.getElementById("access"));
+             const adminData = {
+               adminName: document.getElementById("adminNameInput").value.trim(),
+               emailId: document.getElementById("emailId").value.trim(),
+               contactNumber: document.getElementById("contactNumber").value.trim(),
+               access: document.getElementById("access").value.trim(),
+             };
+
+             try {
+               const response = await fetch("/admin/new-admin-creation", {
+                 method: "POST",
+                 headers: { "Content-Type": "application/json" },
+                 body: JSON.stringify(adminData),
+               });
+
+               if (response.ok) {
+                 msgBox.style.color = "green";
+                 msgBox.textContent = "Admin Added Successfully!";
+                 adminForm.reset();
+               } else {
+                 msgBox.style.color = "red";
+                 msgBox.textContent = "Failed to add admin, check inputs!";
+               }
+             } catch (err) {
+               msgBox.style.color = "red";
+               msgBox.textContent = "Request failed: " + err;
+             }
+           });
+         }
+       }
+
+     } else {
+       const addAdminLi = [...menuList.children].find((li) =>
+         li.textContent.includes("Add Admin")
+       );
+       if (addAdminLi) addAdminLi.remove();
+       if (addAdminCard) addAdminCard.style.display = "none";
+     }
+   } catch (err) {
+     console.error("Access check failed:", err);
+   }
+ }
 
   async function showCustomers() {
     showSection("listOfCustomers");
@@ -122,7 +167,7 @@
           tbody.innerHTML += row;
         });
       } catch (err) {
-        alert(err.message);
+        tbody.innerHTML = '<tr><td colspan="7">User not found</td></tr>';
       }
     });
 
@@ -167,9 +212,42 @@
       window.location.href = `searchuser.html?accNumber=${encodeURIComponent(accNumber)}`;
     }
   }
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchAdminDetails();
+  await checkAdminAccess();
+  showSection("profile");
+const form = document.getElementById("searchUserForm");
+  const msgBox = document.getElementById("searchUserMessage");
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    await fetchAdminDetails();
-    await checkAdminAccess();
-    showSection("profile");
-  });
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msgBox.textContent = "";
+
+      const accNumber = document.getElementById("accNumber").value.trim();
+      console.log(accNumber);
+      if (!accNumber) return;
+
+      try {
+        const res = await fetch(`/admin/user-by-accNum?accNumber=${accNumber}`);
+        if (res.ok) {
+          const user = await res.json();
+
+          if (user) {
+             window.location.href = `searchuser.html?accNumber=${accNumber}`;
+          } else {
+            msgBox.style.color = "red";
+            msgBox.textContent =
+              "No user found with this account number!";
+          }
+        } else {
+          msgBox.style.color = "red";
+          msgBox.textContent = "Failed to search. Try again.";
+        }
+      } catch (err) {
+        msgBox.style.color = "red";
+        msgBox.textContent = "Request failed: " + err;
+      }
+    });
+  }
+});
